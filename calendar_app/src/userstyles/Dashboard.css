@@ -29,7 +29,8 @@ h2 {
 
 .company-item {
     display: flex;
-    align-items: center;
+    justify-content: space-between;
+    align-items: center; 
     gap: 10px;
     padding: 8px;
     cursor: pointer;
@@ -38,14 +39,16 @@ h2 {
     font-size: 14px;
 }
 
-.company-item.selected {
-    background-color: #007bff;
-    color: white;
+.company-left {
+    display: flex;
+    align-items: center; /* Align logo and name vertically */
+    gap: 10px; /* Space between logo and name */
 }
 
-.company-item:hover {
-    background-color: #f1f1f1;
-    transform: translateX(5px);
+.company-right {
+    display: flex;
+    gap: 10px; /* Space between icons */
+    align-items: center; /* Vertically center the icons */
 }
 
 .company-logo {
@@ -58,6 +61,32 @@ h2 {
 .company-name {
     font-weight: bold;
 }
+
+.icon {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.icon:hover {
+    transform: scale(1.1); /* Slightly enlarge the icon on hover */
+}
+
+.notification-alarm {
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 1;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 
 /* Communication Details */
 .communication-details {
@@ -197,9 +226,8 @@ h2 {
     visibility: visible; 
 }
 
-/* Optional: If you want the tooltip to appear near the communication item */
 .communication-item {
-    position: relative; /* Ensure the tooltip positions correctly */
+    position: relative; 
 }
 
 

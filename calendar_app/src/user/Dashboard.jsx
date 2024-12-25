@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import '../userstyles/Dashboard.css';
+import { MdEmail } from 'react-icons/md';
+import { FaLinkedin } from 'react-icons/fa';
+import { HiDocumentReport } from 'react-icons/hi';
+
 
 const companies = [
     {
@@ -7,6 +11,7 @@ const companies = [
         logo: 'logo-a.png',
         email: 'contact@companya.com',
         report: 'Annual Report',
+        unseenMessageCount: 3,
         lastCommunications: [
             {
                 type: 'Email',
@@ -256,6 +261,7 @@ const companies = [
         logo: 'logo-b.png',
         email: 'contact@companyb.com',
         report: 'Quarterly Report',
+        unseenMessageCount: 0,
         lastCommunications: [
             { 
                 type: 'Meeting', 
@@ -325,21 +331,69 @@ const Dashboard = () => {
         <div className="dashboard">
             <h2>Company Dashboard</h2>
             <div className="main-container">
-                <div className="company-list">
-                    <h3>Company List</h3>
-                    {companies.map((company, index) => (
-                        <div
-                            key={index}
-                            className={`company-item ${index === selectedCompanyIndex ? 'selected' : ''}`}
-                            onClick={() => setSelectedCompanyIndex(index)}
-                        >
-                            <img src={company.logo} alt={`${company.name} Logo`} className="company-logo" />
-                            <div className="company-name">{company.name}</div>
-                            <div className="company-email">{company.email}</div>
-                            <div className="company-report">{company.report}</div>
-                        </div>
-                    ))}
+            
+
+            <div className="company-list">
+    <h3>Company List</h3>
+    {companies.map((company, index) => (
+        <div
+            key={index}
+            className={`company-item ${index === selectedCompanyIndex ? 'selected' : ''}`}
+            onClick={() => setSelectedCompanyIndex(index)}
+        >
+            <div className="company-left">
+                <img 
+                    src={company.logo} 
+                    alt={`${company.name} Logo`} 
+                    className="company-logo" 
+                    onClick={(e) => { 
+                        e.stopPropagation();
+                        // Handle company logo click here
+                    }} 
+                />
+                <div className="company-name">{company.name}</div>
+            </div>
+            <div className="company-right">
+                <MdEmail
+                    className="icon"
+                    size={20}
+                    color="gray"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        window.location.href = `mailto:${company.email}`;
+                    }}
+                />
+                <FaLinkedin
+                    className="icon"
+                    size={20}
+                    color="#0077b5"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(`https://www.linkedin.com/company/${company.name}`, '_blank');
+                    }}
+                />
+                <HiDocumentReport
+                    className="icon"
+                    size={20}
+                    color="blue"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        alert(`Opening ${company.report}`);
+                    }}
+                />
+                 {/* Notification alarm for unseen messages */}
+            {company.unseenMessageCount >= 0 && (
+                <div className="notification-alarm">
+                    {company.unseenMessageCount}
                 </div>
+            )}
+            </div>
+           
+        </div>
+    ))}
+</div>
+
+
 
                 <div className="communication-details">
                     <h3>Communication Details</h3>
