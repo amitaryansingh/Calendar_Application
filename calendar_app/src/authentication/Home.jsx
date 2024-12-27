@@ -5,7 +5,12 @@ import "./Home.css";
 
 const Home = ({ setIsAuthenticated }) => {
   const [formType, setFormType] = useState("signin");
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+  });
   const [signupMessage, setSignupMessage] = useState(""); // State to store signup message
   const navigate = useNavigate(); // Create navigate function for redirect
 
@@ -36,7 +41,7 @@ const Home = ({ setIsAuthenticated }) => {
 
         alert("Welcome!");
       } else if (formType === "signup") {
-        // Sign up logic
+        // Sign up logic with the additional fields
         await signUp(formData);
         setSignupMessage("Account created! You can now log in."); // Show success message
         setFormType("signin"); // Switch form to sign in after successful signup
@@ -55,6 +60,26 @@ const Home = ({ setIsAuthenticated }) => {
       <div className="auth-container">
         <h2>{formType === "signin" ? "Sign In" : "Sign Up"}</h2>
         <form onSubmit={handleSubmit}>
+          {formType === "signup" && (
+            <>
+              <input
+                type="text"
+                name="firstname"
+                placeholder="First Name"
+                value={formData.firstname}
+                onChange={handleInputChange}
+                required
+              />
+              <input
+                type="text"
+                name="lastname"
+                placeholder="Last Name"
+                value={formData.lastname}
+                onChange={handleInputChange}
+                required
+              />
+            </>
+          )}
           <input
             type="email"
             name="email"

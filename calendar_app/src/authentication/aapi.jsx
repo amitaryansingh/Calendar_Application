@@ -20,5 +20,12 @@ export const signIn = (data) => API.post("/auth/signin", data);
 export const getUserRoleByEmail = (email) =>
   API.get(`/auth/users/role?email=${email}`); // Ensure this endpoint is correct
 export const refreshToken = (data) => API.post("/auth/refresh", data);
+// Admin API functions for managing companies and users
+export const getAllCompanies = () => API.get("/admin/companies");
+export const createCompany = (data) => API.post("/admin/companies", data);
+export const deleteCompany = (id) => API.delete(`/admin/companies/${id}`);
+export const getAllUsers = () => API.get("/admin/users");
+export const createUser = (data) => API.post("/admin/users", data);
+export const deleteUser = (id) => API.delete(`/admin/users/${id}`);
 
 export default API;
