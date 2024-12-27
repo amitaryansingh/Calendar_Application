@@ -1,0 +1,41 @@
+.home-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .home-header {
+    background-color: #4caf50;
+    color: white;
+    padding: 15px;
+  }
+  
+  .auth-container {
+    margin: 20px auto;
+    width: 300px;
+    text-align: left;
+  }
+  
+  .auth-container input {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+  }
+  
+  .auth-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .auth-container button:hover {
+    background-color: #45a049;
+  }
+  
+  .auth-container span {
+    color: #4caf50;
+    cursor: pointer;
+  }
+  
