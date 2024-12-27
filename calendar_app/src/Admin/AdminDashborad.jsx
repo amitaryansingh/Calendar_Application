@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getUserRoleByEmail, getAllCompanies, getAllUsers, createCompany, createUser, deleteCompany, deleteUser } from "../authentication/aapi"; // Import API functions
-import axios from "axios";
+import { getUserRoleByEmail, getAllCompanies, getAllUsers, createCompany, createUser, deleteCompany, deleteUser } from "../authentication/aapi";
+import './AdminDashboard.css'; // Import the CSS file
 
 const AdminDashboard = () => {
   const [companies, setCompanies] = useState([]);
@@ -24,7 +24,6 @@ const AdminDashboard = () => {
     role: "USER"
   });
 
-  // Check if user is Admin by role
   useEffect(() => {
     const checkAdminRole = async () => {
       try {
@@ -44,7 +43,6 @@ const AdminDashboard = () => {
     checkAdminRole();
   }, []);
 
-  // Fetch companies and users when isAdmin is true
   useEffect(() => {
     if (isAdmin) {
       const fetchData = async () => {
@@ -66,7 +64,6 @@ const AdminDashboard = () => {
     }
   }, [isAdmin]);
 
-  // Handle company deletion with confirmation
   const handleDeleteCompany = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this company?");
     if (!confirmDelete) return;
@@ -79,7 +76,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // Handle user deletion with confirmation
   const handleDeleteUser = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this user?");
     if (!confirmDelete) return;
@@ -92,19 +88,16 @@ const AdminDashboard = () => {
     }
   };
 
-  // Handle company form input changes
   const handleCompanyInputChange = (e) => {
     const { name, value } = e.target;
     setCompanyForm({ ...companyForm, [name]: value });
   };
 
-  // Handle user form input changes
   const handleUserInputChange = (e) => {
     const { name, value } = e.target;
     setUserForm({ ...userForm, [name]: value });
   };
 
-  // Handle company creation
   const handleCreateCompany = async (e) => {
     e.preventDefault();
     try {
@@ -124,7 +117,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // Handle user creation
   const handleCreateUser = async (e) => {
     e.preventDefault();
     try {
@@ -142,125 +134,139 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div>
-      <h2>Admin Dashboard</h2>
+    <div className="dashboard-container">
+      <h2 className="dashboard-title">Admin Dashboard</h2>
       {loading ? (
         <p>Loading...</p>
       ) : (
         <div>
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && <p className="error-message">{error}</p>}
 
-          <h3>Create Company</h3>
-          <form onSubmit={handleCreateCompany}>
-            <input
-              type="text"
-              name="name"
-              value={companyForm.name}
-              onChange={handleCompanyInputChange}
-              placeholder="Company Name"
-              required
-            />
-            <input
-              type="text"
-              name="location"
-              value={companyForm.location}
-              onChange={handleCompanyInputChange}
-              placeholder="Location"
-              required
-            />
-            <input
-              type="url"
-              name="linkedIn"
-              value={companyForm.linkedIn}
-              onChange={handleCompanyInputChange}
-              placeholder="LinkedIn Profile"
-            />
-            <input
-              type="email"
-              name="emails"
-              value={companyForm.emails}
-              onChange={handleCompanyInputChange}
-              placeholder="Emails"
-            />
-            <input
-              type="text"
-              name="phoneNumbers"
-              value={companyForm.phoneNumbers}
-              onChange={handleCompanyInputChange}
-              placeholder="Phone Numbers"
-            />
-            <textarea
-              name="comments"
-              value={companyForm.comments}
-              onChange={handleCompanyInputChange}
-              placeholder="Comments"
-            />
-            <input
-              type="text"
-              name="communicationPeriodicity"
-              value={companyForm.communicationPeriodicity}
-              onChange={handleCompanyInputChange}
-              placeholder="Communication Periodicity"
-            />
-            <button type="submit">Create Company</button>
-          </form>
+          <section className="form-section">
+            <h3>Create Company</h3>
+            <form onSubmit={handleCreateCompany} className="form">
+              <input
+                type="text"
+                name="name"
+                value={companyForm.name}
+                onChange={handleCompanyInputChange}
+                placeholder="Company Name"
+                required
+                className="input-field"
+              />
+              <input
+                type="text"
+                name="location"
+                value={companyForm.location}
+                onChange={handleCompanyInputChange}
+                placeholder="Location"
+                required
+                className="input-field"
+              />
+              <input
+                type="url"
+                name="linkedIn"
+                value={companyForm.linkedIn}
+                onChange={handleCompanyInputChange}
+                placeholder="LinkedIn Profile"
+                className="input-field"
+              />
+              <input
+                type="email"
+                name="emails"
+                value={companyForm.emails}
+                onChange={handleCompanyInputChange}
+                placeholder="Emails"
+                className="input-field"
+              />
+              <input
+                type="text"
+                name="phoneNumbers"
+                value={companyForm.phoneNumbers}
+                onChange={handleCompanyInputChange}
+                placeholder="Phone Numbers"
+                className="input-field"
+              />
+              <textarea
+                name="comments"
+                value={companyForm.comments}
+                onChange={handleCompanyInputChange}
+                placeholder="Comments"
+                className="textarea-field"
+              />
+              <input
+                type="text"
+                name="communicationPeriodicity"
+                value={companyForm.communicationPeriodicity}
+                onChange={handleCompanyInputChange}
+                placeholder="Communication Periodicity"
+                className="input-field"
+              />
+              <button type="submit" className="submit-btn">Create Company</button>
+            </form>
+          </section>
 
-          <h3>Companies</h3>
-          <ul>
-            {companies.map((company) => (
-              <li key={company.id}>
-                {company.name} - 
-                <button onClick={() => handleDeleteCompany(company.id)}>Delete</button>
-              </li>
-            ))}
-          </ul>
+          <section className="data-section">
+            <h3>Companies</h3>
+            <ul className="data-list">
+              {companies.map((company) => (
+                <li key={company.id} className="data-item">
+                  {company.name} - 
+                  <button className="delete-btn" onClick={() => handleDeleteCompany(company.id)}>Delete</button>
+                </li>
+              ))}
+            </ul>
 
-          <h3>Create User</h3>
-          <form onSubmit={handleCreateUser}>
-            <input
-              type="email"
-              name="email"
-              value={userForm.email}
-              onChange={handleUserInputChange}
-              placeholder="Email"
-              required
-            />
-            <input
-              type="text"
-              name="username"
-              value={userForm.username}
-              onChange={handleUserInputChange}
-              placeholder="Username"
-              required
-            />
-            <input
-              type="password"
-              name="password"
-              value={userForm.password}
-              onChange={handleUserInputChange}
-              placeholder="Password"
-              required
-            />
-            <select
-              name="role"
-              value={userForm.role}
-              onChange={handleUserInputChange}
-            >
-              <option value="USER">User</option>
-              <option value="ADMIN">Admin</option>
-            </select>
-            <button type="submit">Create User</button>
-          </form>
+            <h3>Create User</h3>
+            <form onSubmit={handleCreateUser} className="form">
+              <input
+                type="email"
+                name="email"
+                value={userForm.email}
+                onChange={handleUserInputChange}
+                placeholder="Email"
+                required
+                className="input-field"
+              />
+              <input
+                type="text"
+                name="username"
+                value={userForm.username}
+                onChange={handleUserInputChange}
+                placeholder="Username"
+                required
+                className="input-field"
+              />
+              <input
+                type="password"
+                name="password"
+                value={userForm.password}
+                onChange={handleUserInputChange}
+                placeholder="Password"
+                required
+                className="input-field"
+              />
+              <select
+                name="role"
+                value={userForm.role}
+                onChange={handleUserInputChange}
+                className="select-field"
+              >
+                <option value="USER">User</option>
+              </select>
+              <button type="submit" className="submit-btn">Create User</button>
+            </form>
 
-          <h3>Users</h3>
-          <ul>
-            {users.map((user) => (
-              <li key={user.id}>
-                {user.email} - 
-                <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
-              </li>
-            ))}
-          </ul>
+            <h3>Users</h3>
+            <ul className="data-list">
+              {users.map((user) => (
+                <li key={user.id} className="data-item">
+                  {user.email} - 
+                  <button className="delete-btn" onClick={() => handleDeleteUser(user.id)}>Delete</button>
+                </li>
+              ))}
+            </ul>
+          </section>
         </div>
       )}
     </div>
