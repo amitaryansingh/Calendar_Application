@@ -1,4 +1,3 @@
-// api.jsx
 import axios from "axios";
 
 const API = axios.create({
@@ -19,7 +18,7 @@ API.interceptors.request.use((config) => {
 export const signUp = (data) => API.post("/auth/signup", data);
 export const signIn = (data) => API.post("/auth/signin", data);
 export const getUserRoleByEmail = (email) =>
-  API.get(`/auth/users/role?email=${email}`);
+  API.get(`/auth/users/role?email=${email}`); // Ensure this endpoint is correct
 export const refreshToken = (data) => API.post("/auth/refresh", data);
 
 export default API;

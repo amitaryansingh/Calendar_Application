@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { signIn, signUp, getUserRoleByEmail } from "./aapi.jsx"; // Ensure you import getUserRoleByEmail
+import { useNavigate } from "react-router-dom";
 import "./Home.css";
-import { signIn, signUp } from "./api.jsx";
 
 const Home = ({ setIsAuthenticated }) => {
   const [formType, setFormType] = useState("signin");
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [signupMessage, setSignupMessage] = useState(""); // State to store signup message
+  const navigate = useNavigate(); // Create navigate function for redirect
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -14,17 +17,33 @@ const Home = ({ setIsAuthenticated }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response =
-        formType === "signin"
-          ? await signIn(formData)
-          : await signUp(formData);
+      if (formType === "signin") {
+        // Sign in logic
+        const response = await signIn(formData);
+        const { token } = response.data;
+        localStorage.setItem("token", token); // Save token
+        localStorage.setItem("email", formData.email); // Save email for role checking
 
-      localStorage.setItem("token", response.data.token); // Save token
-      setIsAuthenticated(true); // Set authentication state
-      alert("Welcome!");
+        setIsAuthenticated(true); // Set authentication state
+
+        // Fetch user role only after successful login
+        const roleResponse = await getUserRoleByEmail(formData.email);
+        if (roleResponse.data === "ADMIN") {
+          navigate("/admindashboard");
+        } else {
+          navigate("/dashboard");
+        }
+
+        alert("Welcome!");
+      } else if (formType === "signup") {
+        // Sign up logic
+        await signUp(formData);
+        setSignupMessage("Account created! You can now log in."); // Show success message
+        setFormType("signin"); // Switch form to sign in after successful signup
+      }
     } catch (err) {
       console.error(err);
-      alert("Authentication failed!");
+      alert("Authentication failed! Please check your credentials.");
     }
   };
 
@@ -54,6 +73,7 @@ const Home = ({ setIsAuthenticated }) => {
           />
           <button type="submit">{formType === "signin" ? "Sign In" : "Sign Up"}</button>
         </form>
+        {signupMessage && <p style={{ color: "green" }}>{signupMessage}</p>} {/* Show signup success message */}
         <p>
           {formType === "signin" ? (
             <>
