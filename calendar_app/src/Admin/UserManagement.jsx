@@ -4,13 +4,19 @@ import {
   updateUser,
   deleteUser,
   getAllUsers,
+  getAllCompanies,
+  assignCompanyToUser,
+  removeCompanyFromUser,
 } from "../authentication/aapi";
 import "./UserManagement.css";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
+  const [companies, setCompanies] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [companySearchTerm, setCompanySearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [filteredCompanies, setFilteredCompanies] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
   const [userForm, setUserForm] = useState({
     firstname: "",
@@ -18,6 +24,7 @@ const UserManagement = () => {
     email: "",
     password: "",
     role: "USER",
+    assignedCompanies: [],
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -26,14 +33,24 @@ const UserManagement = () => {
     const fetchUsers = async () => {
       try {
         const response = await getAllUsers();
-        console.log(response.data);
         setUsers(response.data);
       } catch (err) {
         setError("Error fetching users.");
         console.error("Error fetching users:", err);
       }
     };
+
+    const fetchCompanies = async () => {
+      try {
+        const response = await getAllCompanies();
+        setCompanies(response.data);
+      } catch (err) {
+        console.error("Error fetching companies:", err);
+      }
+    };
+
     fetchUsers();
+    fetchCompanies();
   }, []);
 
   useEffect(() => {
@@ -52,6 +69,14 @@ const UserManagement = () => {
     );
   }, [searchTerm, users]);
 
+  useEffect(() => {
+    setFilteredCompanies(
+      companies.filter((company) =>
+        company.name.toLowerCase().includes(companySearchTerm.toLowerCase())
+      )
+    );
+  }, [companySearchTerm, companies]);
+
   const handleSave = async () => {
     try {
       const userToSave = {
@@ -64,16 +89,24 @@ const UserManagement = () => {
 
       if (editingUser) {
         const response = await updateUser(editingUser.uid, userToSave);
-        console.log("Update response:", response.data);
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
             user.uid === editingUser.uid ? response.data : user
           )
         );
+        await Promise.all(
+          userForm.assignedCompanies.map((companyId) =>
+            assignCompanyToUser(editingUser.uid, companyId)
+          )
+        );
         setSuccess("User updated successfully!");
       } else {
         const response = await createUser(userToSave);
-        console.log("Create response:", response.data);
+        await Promise.all(
+          userForm.assignedCompanies.map((companyId) =>
+            assignCompanyToUser(response.data.uid, companyId)
+          )
+        );
         setUsers((prevUsers) => [...prevUsers, response.data]);
         setSuccess("User created successfully!");
       }
@@ -87,12 +120,19 @@ const UserManagement = () => {
 
   const handleEdit = (user) => {
     setEditingUser(user);
-    setUserForm({ ...user, password: "" });
+    setUserForm({
+      firstname: user.firstname || "",
+      secondname: user.secondname || "",
+      email: user.email || "",
+      password: "", // Clear password field
+      role: user.role || "USER",
+      assignedCompanies: user.companies || [], // Use user's companies
+    });
   };
+  
 
   const handleDelete = async (id) => {
     try {
-      console.log(id);
       await deleteUser(id);
       setUsers((prevUsers) => prevUsers.filter((user) => user.uid !== id));
       setSuccess("User deleted successfully!");
@@ -104,9 +144,32 @@ const UserManagement = () => {
 
   const resetForm = () => {
     setEditingUser(null);
-    setUserForm({ firstname: "", secondname: "", email: "", password: "", role: "USER" });
+    setUserForm({
+      firstname: "",
+      secondname: "",
+      email: "",
+      password: "",
+      role: "USER",
+      assignedCompanies: [],
+    });
     setError("");
     setSuccess("");
+  };
+
+  const handleAssignCompany = (companyId) => {
+    if (!userForm.assignedCompanies.includes(companyId)) {
+      setUserForm((prevForm) => ({
+        ...prevForm,
+        assignedCompanies: [...prevForm.assignedCompanies, companyId],
+      }));
+    }
+  };
+
+  const handleRemoveCompany = (companyId) => {
+    setUserForm((prevForm) => ({
+      ...prevForm,
+      assignedCompanies: prevForm.assignedCompanies.filter((id) => id !== companyId),
+    }));
   };
 
   return (
@@ -157,56 +220,66 @@ const UserManagement = () => {
       <div className="form">
         <h3>{editingUser ? "Edit User" : "Add New User"}</h3>
         <div className="form-grid">
-          <div className="form-field">
+          <input
+            type="text"
+            placeholder="First Name"
+            value={userForm.firstname}
+            onChange={(e) => setUserForm({ ...userForm, firstname: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Second Name"
+            value={userForm.secondname}
+            onChange={(e) => setUserForm({ ...userForm, secondname: e.target.value })}
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={userForm.email}
+            onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={userForm.password}
+            onChange={(e) => setUserForm({ ...userForm, password: e.target.value })}
+          />
+          <select
+            value={userForm.role}
+            onChange={(e) => setUserForm({ ...userForm, role: e.target.value })}
+          >
+            <option value="USER">User</option>
+            <option value="ADMIN">Admin</option>
+          </select>
+
+           <h4>Assigned Companies</h4>
+           <ul>
+           {userForm.assignedCompanies.map((company) => (
+           <li key={company.mid}>
+            {company.name}
+            <button onClick={() => handleRemoveCompany(company.mid)}>Remove</button></li>
+             ))}
+             </ul>
+
+          <div className="company-search">
             <input
               type="text"
-              placeholder="First Name"
-              value={userForm.firstname}
-              onChange={(e) => setUserForm({ ...userForm, firstname: e.target.value })}
+              placeholder="Search companies"
+              value={companySearchTerm}
+              onChange={(e) => setCompanySearchTerm(e.target.value)}
             />
-          </div>
-          <div className="form-field">
-            <input
-              type="text"
-              placeholder="Second Name"
-              value={userForm.secondname}
-              onChange={(e) => setUserForm({ ...userForm, secondname: e.target.value })}
-            />
-          </div>
-          <div className="form-field">
-            <input
-              type="email"
-              placeholder="Email"
-              value={userForm.email}
-              onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
-            />
-          </div>
-          <div className="form-field">
-            <input
-              type="password"
-              placeholder="Password"
-              value={userForm.password}
-              onChange={(e) => setUserForm({ ...userForm, password: e.target.value })}
-            />
-          </div>
-          <div className="form-field full-width">
-            <select
-              value={userForm.role}
-              onChange={(e) => setUserForm({ ...userForm, role: e.target.value })}
-            >
-              <option value="USER">User</option>
-              <option value="ADMIN">Admin</option>
-            </select>
+            <ul>
+              {filteredCompanies.map((company) => (
+                <li key={company.id}>
+                  {company.name}
+                  <button onClick={() => handleAssignCompany(company.id)}>Assign</button>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-        <button onClick={handleSave} className="save-btn">
-          {editingUser ? "Save Changes" : "Add User"}
-        </button>
-        {editingUser && (
-          <button onClick={resetForm} className="cancel-button">
-            Cancel
-          </button>
-        )}
+        <button onClick={handleSave}>{editingUser ? "Save Changes" : "Add User"}</button>
+        {editingUser && <button onClick={resetForm}>Cancel</button>}
       </div>
     </div>
   );
