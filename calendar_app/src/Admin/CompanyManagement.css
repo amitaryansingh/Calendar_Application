@@ -1,0 +1,175 @@
+.company-management {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .company-management h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-bar {
+    margin-bottom: 20px;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .company-list{
+    margin-bottom: 10px;
+  }
+  
+  .company-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .company-list th,
+  .company-list td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  .company-list th {
+    background-color: #f9f9f9;
+  }
+  
+  .company-list .btn {
+    padding: 5px 10px;
+    margin: 2px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .company-list .btn-edit {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .company-list .btn-edit:hover {
+    background-color: #0056b3;
+  }
+  
+  .company-list .btn-delete {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .company-list .btn-delete:hover {
+    background-color: #c82333;
+  }
+  
+  .form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form input,
+  .form textarea,
+  .form select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .form textarea {
+    resize: vertical;
+  }
+  
+  .user-selection {
+    margin-top: 20px;
+  }
+  
+  .user-selection input[type="text"] {
+    margin-bottom: 10px;
+  }
+  
+  .user-selection .user-list {
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  
+  .user-selection .user-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .user-selection .user-item input {
+    margin-right: 10px;
+  }
+  
+  .btn {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn-save {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .btn-save:hover {
+    background-color: #218838;
+  }
+  
+  .btn-cancel {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .btn-cancel:hover {
+    background-color: #5a6268;
+  }
+  
+  .company-management .error {
+    color: #dc3545;
+    text-align: center;
+  }
+  
+  .company-management .success {
+    color: #28a745;
+    text-align: center;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .company-list table,
+    .company-list th,
+    .company-list td {
+      font-size: 14px;
+    }
+  
+    .form input,
+    .form textarea,
+    .form select {
+      font-size: 14px;
+    }
+  
+    .btn {
+      font-size: 14px;
+      padding: 8px;
+    }
+  }
+  
