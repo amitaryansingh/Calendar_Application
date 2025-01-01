@@ -26,7 +26,7 @@ const UserManagement = () => {
     role: "USER",
     assignedCompanies: [],
   });
-  const [removedCompanies, setRemovedCompanies] = useState([]); // Track removed companies
+  const [removedCompanies, setRemovedCompanies] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 

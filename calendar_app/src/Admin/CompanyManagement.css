@@ -37,6 +37,10 @@
   font-size: 14px;
 }
 
+.company-list {
+  width: 100%;
+}
+
 .company-list table {
   width: 100%;
   border-collapse: collapse;

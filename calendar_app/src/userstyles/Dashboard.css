@@ -1,5 +1,5 @@
 /* General Styles */
-.dashboard {
+.company-dashboard {
     padding: 20px;
     font-family: Arial, sans-serif;
 }
@@ -10,14 +10,14 @@ h2 {
     font-size: 24px;
 }
 
-.main-container {
+.dashboard-container {
     display: flex;
     justify-content: space-between;
     gap: 10px;
     flex-wrap: wrap;
 }
 
-.company-list {
+.company-list-container {
     width: 35%;
     background-color: #f8f9fa;
     padding: 12px;
@@ -39,16 +39,16 @@ h2 {
     font-size: 14px;
 }
 
-.company-left {
+.company-info {
     display: flex;
-    align-items: center; /* Align logo and name vertically */
-    gap: 10px; /* Space between logo and name */
+    align-items: center; 
+    gap: 10px; 
 }
 
-.company-right {
+.company-actions {
     display: flex;
-    gap: 10px; /* Space between icons */
-    align-items: center; /* Vertically center the icons */
+    gap: 10px; 
+    align-items: center; 
 }
 
 .company-logo {
@@ -68,10 +68,10 @@ h2 {
 }
 
 .icon:hover {
-    transform: scale(1.1); /* Slightly enlarge the icon on hover */
+    transform: scale(1.1); 
 }
 
-.notification-alarm {
+.notification-badge {
     background-color: red;
     color: white;
     font-size: 12px;
@@ -87,19 +87,18 @@ h2 {
     justify-content: center;
 }
 
-
 /* Communication Details */
-.communication-details {
+.communication-details-container {
     width: 60%;
     background-color: #f8f9fa;
     padding: 12px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
-    max-height: 500px;
+    max-height: 500 px;
 }
 
-.communication-options {
+.communication-filter-options {
     display: flex;
     justify-content: flex-start;
     gap: 12px;
@@ -128,7 +127,7 @@ h2 {
 }
 
 /* Highlighting the next scheduled communication */
-.next-communication.highlighted {
+.next-communication-highlighted {
     background-color: #fffcf5;
     padding: 10px;
     border-left: 5px solid #007bff;
@@ -136,7 +135,7 @@ h2 {
 }
 
 /* Last Communications */
-.last-communications {
+.last-communications-list {
     margin-bottom: 15px;
 }
 
@@ -153,26 +152,6 @@ h2 {
 .communication-item:hover {
     background-color: #f1f1f1;
     transform: scale(1.02);
-}
-
-.communication-item.email {
-    border-left: 5px solid blue;
-}
-
-.communication-item.phone-call {
-    border-left: 5px solid green;
-}
-
-.communication-item.meeting {
-    border-left: 5px solid purple;
-}
-
-.communication-item.linkedin-post {
-    border-left: 5px solid orange;
-}
-
-.communication-item.follow-up {
-    border-left: 5px solid yellow;
 }
 
 .communication-header {
@@ -201,15 +180,6 @@ h2 {
     margin: 0;
 }
 
-.next-communication {
-    background: #ffffff;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    font-size: 14px;
-    margin-bottom: 15px;
-}
-
 /* Tooltip Styles */
 .tooltip {
     background-color: rgba(0, 0, 0, 0.7);
@@ -230,20 +200,18 @@ h2 {
     position: relative; 
 }
 
-
-
 /* Responsive Design */
 @media (max-width: 1024px) {
-    .main-container {
+    .dashboard-container {
         flex-direction: column;
     }
 
-    .company-list {
+    .company-list-container {
         width: 100%;
         margin-bottom: 10px;
     }
 
-    .communication-details {
+    .communication-details-container {
         width: 100%;
     }
 }
@@ -267,7 +235,7 @@ h2 {
         padding: 6px;
     }
 
-    .next-communication {
+    .next-communication-highlighted {
         font-size: 12px;
         padding: 8px;
     }
