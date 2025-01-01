@@ -1,175 +1,190 @@
-.company-management {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    max-width: 1200px;
-    margin: auto;
-  }
-  
-  .company-management h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .search-bar {
-    margin-bottom: 20px;
-  }
-  
-  .search-bar input {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+/* CompanyManagement.css */
 
-  .company-list{
-    margin-bottom: 10px;
-  }
-  
-  .company-list table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  
-  .company-list th,
-  .company-list td {
-    padding: 10px;
-    text-align: left;
-    border: 1px solid #ddd;
-  }
-  
-  .company-list th {
-    background-color: #f9f9f9;
-  }
-  
-  .company-list .btn {
-    padding: 5px 10px;
-    margin: 2px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .company-list .btn-edit {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .company-list .btn-edit:hover {
-    background-color: #0056b3;
-  }
-  
-  .company-list .btn-delete {
-    background-color: #dc3545;
-    color: white;
-  }
-  
-  .company-list .btn-delete:hover {
-    background-color: #c82333;
-  }
-  
-  .form {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .form input,
-  .form textarea,
-  .form select {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .form textarea {
-    resize: vertical;
-  }
-  
-  .user-selection {
-    margin-top: 20px;
-  }
-  
-  .user-selection input[type="text"] {
-    margin-bottom: 10px;
-  }
-  
-  .user-selection .user-list {
-    max-height: 150px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-  }
-  
-  .user-selection .user-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .user-selection .user-item input {
-    margin-right: 10px;
-  }
-  
-  .btn {
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .btn-save {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .btn-save:hover {
-    background-color: #218838;
-  }
-  
-  .btn-cancel {
-    background-color: #6c757d;
-    color: white;
-  }
-  
-  .btn-cancel:hover {
-    background-color: #5a6268;
-  }
-  
-  .company-management .error {
-    color: #dc3545;
-    text-align: center;
-  }
-  
-  .company-management .success {
-    color: #28a745;
-    text-align: center;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .company-list table,
-    .company-list th,
-    .company-list td {
-      font-size: 14px;
-    }
-  
-    .form input,
-    .form textarea,
-    .form select {
-      font-size: 14px;
-    }
-  
-    .btn {
-      font-size: 14px;
-      padding: 8px;
-    }
-  }
-  
+.company-management {
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+.company-management h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+}
+
+.success {
+  color: green;
+  font-weight: bold;
+  text-align: center;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.company-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.company-list th,
+.company-list td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.company-list th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.company-list tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.company-list tr:hover {
+  background-color: #f1f1f1;
+}
+
+.company-list button {
+  padding: 5px 10px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.company-list button:hover {
+  opacity: 0.8;
+}
+
+.company-list button:nth-child(1) {
+  background-color: #4caf50;
+  color: white;
+}
+
+.company-list button:nth-child(2) {
+  background-color: #f44336;
+  color: white;
+}
+
+.form {
+  margin-top: 20px;
+}
+
+.form h3 {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-grid textarea {
+  resize: vertical;
+  height: 80px;
+}
+
+.form-grid h4 {
+  grid-column: 1 / -1;
+  margin-top: 20px;
+  font-size: 16px;
+  color: #333;
+}
+
+.user-search input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.user-search ul,
+.form-grid ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-search li,
+.form-grid li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  background-color: #f9f9f9;
+}
+
+.user-search button,
+.form-grid button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.user-search button:hover,
+.form-grid button:hover {
+  opacity: 0.8;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button:nth-child(2) {
+  background-color: #f44336;
+}
+
+button:nth-child(2):hover {
+  background-color: #c62828;
+}

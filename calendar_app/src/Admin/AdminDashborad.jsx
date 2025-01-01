@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getUserRoleByEmail } from "../authentication/aapi";
 import UserManagement from "./UserManagement";
-import CompanyManagement from "./CompanyManagement"; // Import the CompanyManagement component
+import CompanyManagement from "./CompanyManagement";
+import MessageManagement from "./MessageManagement"; // Import MessageManagement component
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
@@ -67,13 +68,8 @@ const AdminDashboard = () => {
       </div>
       <div className="section-content">
         {activeSection === "users" && <UserManagement />}
-        {activeSection === "companies" && <CompanyManagement />} {/* Add CompanyManagement here */}
-        {activeSection === "messages" && (
-          <div>
-            <h3>Message Management</h3>
-            {/* Add message management logic */}
-          </div>
-        )}
+        {activeSection === "companies" && <CompanyManagement />}
+        {activeSection === "messages" && <MessageManagement />}
       </div>
     </div>
   );

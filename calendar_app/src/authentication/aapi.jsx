@@ -67,4 +67,17 @@ export const getMessagesWithinDateRange = (startDate, endDate) =>
 export const getMessagesNotSeenByUserForCompany = (userId, companyId) =>
   API.get(`/admin/messages/user-company-not-seen`, { params: { userId, companyId } });
 
+// Assign users and a company to a message
+export const assignUsersAndCompanyToMessage = (messageId, companyId, userIds) => {
+  // Construct the request payload
+  const payload = userIds?.length ? userIds : null; // Only include userIds if they are provided and not empty
+
+  return API.post(`/admin/messages/${messageId}/assign`, payload, {
+    params: {
+      companyId: companyId || undefined, // Only include companyId if provided
+    },
+  });
+};
+
+
 export default API;

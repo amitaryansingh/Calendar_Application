@@ -5,12 +5,16 @@ import {
   deleteCompany,
   getAllCompanies,
   getAllUsers,
-} from "../authentication/aapi"; // Adjust paths accordingly
-import "./CompanyManagement.css"; // Add your styling here
+  assignMultipleUsersToCompany,
+  removeUserFromCompany,
+} from "../authentication/aapi";
+import "./CompanyManagement.css";
 
 const CompanyManagement = () => {
   const [companies, setCompanies] = useState([]);
   const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [userSearchTerm, setUserSearchTerm] = useState("");
   const [filteredCompanies, setFilteredCompanies] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [editingCompany, setEditingCompany] = useState(null);
@@ -23,11 +27,11 @@ const CompanyManagement = () => {
     phoneNumbers: [],
     comments: "",
     communicationPeriodicity: "",
-    userIds: [],
+    assignedUsers: [],
   });
+  const [removedUsers, setRemovedUsers] = useState([]); // Track removed users
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -39,10 +43,7 @@ const CompanyManagement = () => {
         console.error("Error fetching companies:", err);
       }
     };
-    fetchCompanies();
-  }, []);
 
-  useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await getAllUsers();
@@ -52,79 +53,181 @@ const CompanyManagement = () => {
         console.error("Error fetching users:", err);
       }
     };
+
+    fetchCompanies();
     fetchUsers();
   }, []);
 
   useEffect(() => {
     setFilteredCompanies(
-      companies.filter((company) => {
-        const companyName = company.name || "";
-        const location = company.location || "";
-        const id = company.id ? company.id.toString() : "";
-
-        return (
-          companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          id.includes(searchTerm)
-        );
-      })
+      companies.filter((company) =>
+        company.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
     );
   }, [searchTerm, companies]);
 
   useEffect(() => {
     setFilteredUsers(
-      users.filter((user) => {
-        const firstName = user.firstname || "";
-        const email = user.email || "";
-        const id = user.id ? user.id.toString() : "";
-
-        return (
-          firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          id.includes(searchTerm)
-        );
-      })
+      users.filter((user) =>
+        user.firstname.toLowerCase().includes(userSearchTerm.toLowerCase())
+      )
     );
-  }, [searchTerm, users]);
+  }, [userSearchTerm, users]);
 
+  // const handleSave = async () => {
+  //   try {
+  //     const companyToSave = {
+  //       name: companyForm.name,
+  //       logoUrl: companyForm.logoUrl,
+  //       location: companyForm.location,
+  //       linkedInProfile: companyForm.linkedInProfile,
+  //       emails: companyForm.emails,
+  //       phoneNumbers: companyForm.phoneNumbers,
+  //       comments: companyForm.comments,
+  //       communicationPeriodicity: companyForm.communicationPeriodicity,
+  //     };
+  
+  //     // Update company details
+  //     if (editingCompany) {
+  //       const updatedCompanyResponse = await updateCompany(editingCompany.mid, companyToSave);
+  
+  //       const currentUserIds = editingCompany.users.map((user) => user.uid);
+  //       const newUserIds = companyForm.assignedUsers.map((user) => user.uid);
+  //       const removedUserIds = removedUsers.map((user) => user.uid);
+  
+  //       // 1. Remove users marked for removal
+  //       for (const userId of removedUserIds) {
+  //         if (currentUserIds.includes(userId)) {
+  //           try {
+  //             await removeUserFromCompany(editingCompany.mid, userId);
+  //           } catch (error) {
+  //             console.error(`Failed to remove user with ID ${userId}`, error);
+  //           }
+  //         }
+  //       }
+  
+  //       // 2. Assign new users
+  //       const usersToAssign = newUserIds.filter((id) => !currentUserIds.includes(id));
+  //       if (usersToAssign.length > 0) {
+  //         try {
+  //           await assignMultipleUsersToCompany(editingCompany.mid, usersToAssign);
+  //         } catch (error) {
+  //           console.error("Failed to assign users:", error);
+  //         }
+  //       }
+  
+  //       const updatedCompany = {
+  //         ...updatedCompanyResponse.data,
+  //         users: companyForm.assignedUsers,
+  //       };
+  
+  //       setCompanies((prevCompanies) =>
+  //         prevCompanies.map((company) =>
+  //           company.mid === editingCompany.mid ? updatedCompany : company
+  //         )
+  //       );
+  
+  //       setSuccess("Company updated successfully!");
+  //     } else {
+  //       // Create a new company
+  //       const newCompanyResponse = await createCompany(companyToSave);
+  //       setCompanies((prevCompanies) => [...prevCompanies, newCompanyResponse.data]);
+  //       setSuccess("Company created successfully!");
+  //     }
+  
+  //     resetForm();
+  //   } catch (err) {
+  //     console.error("Error saving company:", err.response || err.message);
+  //     setError(err.response?.data?.message || "Error saving company.");
+  //   }
+  // };
+  
   const handleSave = async () => {
     try {
-      const companyToSave = { ...companyForm };
-
+      const companyToSave = {
+        name: companyForm.name,
+        logoUrl: companyForm.logoUrl,
+        location: companyForm.location,
+        linkedInProfile: companyForm.linkedInProfile,
+        emails: companyForm.emails,
+        phoneNumbers: companyForm.phoneNumbers,
+        comments: companyForm.comments,
+        communicationPeriodicity: companyForm.communicationPeriodicity,
+      };
+  
       if (editingCompany) {
-        const response = await updateCompany(editingCompany.id, companyToSave);
+        const updatedCompanyResponse = await updateCompany(editingCompany.mid, companyToSave);
+  
+        // 1. Remove users
+        for (const user of removedUsers) {
+          try {
+            await removeUserFromCompany(editingCompany.mid, user.uid);
+          } catch (err) {
+            console.error(`Error removing user ${user.uid}:`, err);
+            setError(`Failed to remove user ${user.firstname}.`);
+          }
+        }
+  
+        // 2. Assign new users
+        const newUserIds = companyForm.assignedUsers.map((user) => user.uid);
+        if (newUserIds.length > 0) {
+          try {
+            await assignMultipleUsersToCompany(editingCompany.mid, newUserIds);
+          } catch (err) {
+            console.error("Error assigning users:", err);
+            setError("Failed to assign users to the company.");
+          }
+        }
+  
+        // Update frontend state
+        const updatedCompany = {
+          ...updatedCompanyResponse.data,
+          users: companyForm.assignedUsers, // Synchronize with the updated assigned users
+        };
+  
         setCompanies((prevCompanies) =>
           prevCompanies.map((company) =>
-            company.id === editingCompany.id ? response.data : company
+            company.mid === editingCompany.mid ? updatedCompany : company
           )
         );
+  
         setSuccess("Company updated successfully!");
       } else {
-        const response = await createCompany(companyToSave);
-        setCompanies((prevCompanies) => [...prevCompanies, response.data]);
+        // Create a new company
+        const newCompanyResponse = await createCompany(companyToSave);
+        setCompanies((prevCompanies) => [...prevCompanies, newCompanyResponse.data]);
         setSuccess("Company created successfully!");
       }
-
+  
       resetForm();
     } catch (err) {
-      setError("Error saving company.");
-      console.error("Error saving company:", err);
+      console.error("Error saving company:", err.response || err.message);
+      setError(err.response?.data?.message || "Error saving company.");
     }
   };
+  
 
   const handleEdit = (company) => {
     setEditingCompany(company);
     setCompanyForm({
-      ...company,
-      userIds: company.users ? company.users.map((user) => user.id) : [],
+      name: company.name || "",
+      logoUrl: company.logoUrl || "",
+      location: company.location || "",
+      linkedInProfile: company.linkedInProfile || "",
+      emails: company.emails || [],
+      phoneNumbers: company.phoneNumbers || [],
+      comments: company.comments || "",
+      communicationPeriodicity: company.communicationPeriodicity || "",
+      assignedUsers: company.users || [],
     });
+    setRemovedUsers([]); // Reset removed users on edit
   };
 
   const handleDelete = async (id) => {
     try {
       await deleteCompany(id);
       setCompanies((prevCompanies) =>
-        prevCompanies.filter((company) => company.id !== id)
+        prevCompanies.filter((company) => company.mid !== id)
       );
       setSuccess("Company deleted successfully!");
     } catch (err) {
@@ -144,19 +247,35 @@ const CompanyManagement = () => {
       phoneNumbers: [],
       comments: "",
       communicationPeriodicity: "",
-      userIds: [],
+      assignedUsers: [],
     });
+    setRemovedUsers([]);
     setError("");
     setSuccess("");
   };
 
-  const handleUserSelection = (userId) => {
-    setCompanyForm((prevForm) => {
-      const updatedUserIds = prevForm.userIds.includes(userId)
-        ? prevForm.userIds.filter((id) => id !== userId)
-        : [...prevForm.userIds, userId];
-      return { ...prevForm, userIds: updatedUserIds };
-    });
+  const handleAssignUser = (userId) => {
+    const userToAssign = users.find((user) => user.uid === userId);
+    if (userToAssign && !companyForm.assignedUsers.some((u) => u.uid === userId)) {
+      setCompanyForm((prevForm) => ({
+        ...prevForm,
+        assignedUsers: [...prevForm.assignedUsers, userToAssign],
+      }));
+    }
+  };
+
+  const handleRemoveUser = (userId) => {
+    setCompanyForm((prevForm) => ({
+      ...prevForm,
+      assignedUsers: prevForm.assignedUsers.filter((user) => user.uid !== userId),
+    }));
+
+    if (!removedUsers.some((user) => user.uid === userId)) {
+      const userToRemove = companyForm.assignedUsers.find((user) => user.uid === userId);
+      setRemovedUsers((prev) => [...prev, userToRemove]);
+    }
+
+    setSuccess("User marked for removal. Click 'Save Changes' to persist.");
   };
 
   return (
@@ -168,7 +287,7 @@ const CompanyManagement = () => {
       <div className="search-bar">
         <input
           type="text"
-          placeholder="Search by name, location, or ID"
+          placeholder="Search companies"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -178,27 +297,21 @@ const CompanyManagement = () => {
         <table>
           <thead>
             <tr>
+              <th>ID</th>
               <th>Name</th>
-              <th>Email</th>
               <th>Location</th>
-              <th>LinkedIn</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredCompanies.map((company) => (
-              <tr key={company.id}>
+              <tr key={company.mid}>
+                <td>{company.mid}</td>
                 <td>{company.name}</td>
-                <td>{company.emails.join(", ")}</td>
                 <td>{company.location}</td>
-                <td>{company.linkedInProfile}</td>
                 <td>
-                  <button className="btn btn-edit" onClick={() => handleEdit(company)}>
-                    Edit
-                  </button>
-                  <button className="btn btn-delete" onClick={() => handleDelete(company.id)}>
-                    Delete
-                  </button>
+                  <button onClick={() => handleEdit(company)}>Edit</button>
+                  <button onClick={() => handleDelete(company.mid)}>Delete</button>
                 </td>
               </tr>
             ))}
@@ -209,100 +322,95 @@ const CompanyManagement = () => {
       <div className="form">
         <h3>{editingCompany ? "Edit Company" : "Add New Company"}</h3>
         <div className="form-grid">
-          <div>
-            <input
-              type="text"
-              placeholder="Company Name"
-              value={companyForm.name}
-              onChange={(e) => setCompanyForm({ ...companyForm, name: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Logo URL"
-              value={companyForm.logoUrl}
-              onChange={(e) => setCompanyForm({ ...companyForm, logoUrl: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Location"
-              value={companyForm.location}
-              onChange={(e) => setCompanyForm({ ...companyForm, location: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="LinkedIn Profile"
-              value={companyForm.linkedInProfile}
-              onChange={(e) => setCompanyForm({ ...companyForm, linkedInProfile: e.target.value })}
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Emails (comma separated)"
-              value={companyForm.emails.join(", ")}
-              onChange={(e) =>
-                setCompanyForm({ ...companyForm, emails: e.target.value.split(", ") })
-              }
-            />
-            <input
-              type="text"
-              placeholder="Phone Numbers (comma separated)"
-              value={companyForm.phoneNumbers.join(", ")}
-              onChange={(e) =>
-                setCompanyForm({ ...companyForm, phoneNumbers: e.target.value.split(", ") })
-              }
-            />
-            <textarea
-              placeholder="Comments"
-              value={companyForm.comments}
-              onChange={(e) => setCompanyForm({ ...companyForm, comments: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Communication Periodicity"
-              value={companyForm.communicationPeriodicity}
-              onChange={(e) =>
-                setCompanyForm({
-                  ...companyForm,
-                  communicationPeriodicity: e.target.value,
-                })
-              }
-            />
-          </div>
-        </div>
-
-        <div className="user-selection">
-          <h4>Assign Users</h4>
           <input
             type="text"
-            placeholder="Search users by name, email, or ID"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Name"
+            value={companyForm.name}
+            onChange={(e) => setCompanyForm({ ...companyForm, name: e.target.value })}
           />
-          <div className="user-list">
-            {filteredUsers.map((user) => (
-              <div key={user.id} className="user-item">
-                <input
-                  type="checkbox"
-                  checked={companyForm.userIds.includes(user.id)}
-                  onChange={() => handleUserSelection(user.id)}
-                />
-                <span>
-                  {user.firstname} {user.secondname} ({user.email})
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+          <input
+            type="text"
+            placeholder="Logo URL"
+            value={companyForm.logoUrl}
+            onChange={(e) => setCompanyForm({ ...companyForm, logoUrl: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Location"
+            value={companyForm.location}
+            onChange={(e) => setCompanyForm({ ...companyForm, location: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Emails (comma-separated)"
+            value={companyForm.emails.join(", ")}
+            onChange={(e) =>
+              setCompanyForm({ ...companyForm, emails: e.target.value.split(",").map((email) => email.trim()) })
+            }
+          />
+          <input
+            type="text"
+            placeholder="Phone Numbers (comma-separated)"
+            value={companyForm.phoneNumbers.join(", ")}
+            onChange={(e) =>
+              setCompanyForm({ ...companyForm, phoneNumbers: e.target.value.split(",").map((phone) => phone.trim()) })
+            }
+          />
+          <input
+            type="text"
+            placeholder="LinkedIn Profile"
+            value={companyForm.linkedInProfile}
+            onChange={(e) => setCompanyForm({ ...companyForm, linkedInProfile: e.target.value })}
+          />
+          <textarea
+            placeholder="Comments"
+            value={companyForm.comments}
+            onChange={(e) => setCompanyForm({ ...companyForm, comments: e.target.value })}
+          />
+          <select 
+          value={companyForm.communicationPeriodicity}
+          onChange={(e) => setCompanyForm({ ...companyForm, communicationPeriodicity: e.target.value })}>
+          <option value="Daily">Daily</option>
+          <option value="Weekly">Weekly</option>
+          <option value="every 2 weeks">Every 2 Weeks</option>
+          <option value="Monthly">Monthly</option> 
+          </select>
 
-        <button className="btn btn-save" onClick={handleSave}>
+          <h4>Assigned Users</h4>
+          <ul>
+            {companyForm.assignedUsers.map((user) => (
+              <li key={`assigned-${user.uid}`}>
+                {user.firstname} {user.secondname} {user.email}
+                <button onClick={() => handleRemoveUser(user.uid)}>Remove</button>
+              </li>
+            ))}
+          </ul>
+
+          {editingCompany && (
+            <div className="user-search">
+              <input
+                type="text"
+                placeholder="Search users"
+                value={userSearchTerm}
+                onChange={(e) => setUserSearchTerm(e.target.value)}
+              />
+              <ul>
+                {filteredUsers
+                  .filter((user) => !companyForm.assignedUsers.some((u) => u.uid === user.uid))
+                  .map((user) => (
+                    <li key={`available-${user.uid}`}>
+                      {user.firstname} {user.secondname}
+                      <button onClick={() => handleAssignUser(user.uid)}>Assign</button>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          )}
+        </div>
+        <button onClick={handleSave}>
           {editingCompany ? "Save Changes" : "Add Company"}
         </button>
-        {editingCompany && (
-          <button onClick={resetForm} className="btn btn-cancel">
-            Cancel
-          </button>
-        )}
+        {editingCompany && <button onClick={resetForm}>Cancel</button>}
       </div>
     </div>
   );
