@@ -14,6 +14,50 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
+export const getUserIdByEmail = (email) => API.get(`/userReq/user/id`, { params: { email } });
+
+export const markMessageAsSeen = (messageId, userId) => 
+  API.put(`/userReq/messages/${messageId}/seen`, null, { params: { userId } });
+
+
+// User profile and company-related functions
+export const getUserProfile = (id) => API.get(`/userReq/profile/${id}`);
+
+export const getUnseenMessagesByUser = (userId) => API.get(`/userReq/messages/unseen/${userId}`);
+
+
+export const getCompanyByCompanyIdForUser  = (id) => API.get(`/userReq/companies/${id}`);
+
+export const getUserMessagesByCompanyForUser  = (userId, companyId) => 
+  API.get(`/userReq/users/${userId}/companies/${companyId}/messages`);
+
+export const getCompanyUsersForUser  = (companyId) => API.get(`/userReq/companies/${companyId}/users`);
+
+
+export const getMessageByIdForUser  = (id) => API.get(`/userReq/messages/${id}`);
+
+
+export const getMessagesByUserIdForUser  = (userId) => API.get(`/userReq/message/user/${userId}`);
+
+
+export const getMessagesByCompanyIdForUser  = (companyId) => API.get(`/userReq/message/company/${companyId}`);
+
+
+export const getMessagesByPriorityLevelForUser  = (priorityLevel) => 
+  API.get(`/userReq/message/priority`, { params: { priorityLevel } });
+
+export const getMessagesBySeenStatusForUser  = (seen) => 
+  API.get(`/userReq/message/seen`, { params: { seen } });
+
+
+export const getMessagesWithinDateRangeForUser  = (startDate, endDate) => 
+  API.get(`/userReq/message/date-range`, { params: { startDate, endDate } });
+
+
+export const getMessagesNotSeenByUserForCompanyforuser = (userId, companyId) => 
+  API.get(`/userReq/messages/user-company-not-seen`, { params: { userId, companyId } });
+
+
 // Export API functions for authentication
 export const signUp = (data) => API.post("/auth/signup", data);
 export const signIn = (data) => API.post("/auth/signin", data);

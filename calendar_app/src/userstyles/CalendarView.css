@@ -1,0 +1,117 @@
+/* Calendar Container */
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Calendar Styles */
+  .rbc-calendar {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .rbc-header {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  .rbc-event {
+    border-radius: 5px;
+    padding: 5px;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .rbc-event:hover {
+    opacity: 0.8;
+  }
+  
+  /* Day Cell Styles */
+  .rbc-day-slot {
+    border: 1px solid #e0e0e0;
+  }
+  
+  .rbc-day-slot:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Popup Styles */
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    max-width: 90%;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    padding: 20px;
+    overflow: hidden;
+    animation: fadeIn 0.5s;
+  }
+  
+  .popup-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .popup-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .popup-header h3 {
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .popup-body {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .popup-body p {
+    margin: 5px 0;
+  }
+  
+  .popup button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .popup button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Animation for Popup */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -40%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }

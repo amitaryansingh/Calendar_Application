@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { signIn, signUp, getUserRoleByEmail } from "./aapi.jsx"; // Ensure you import getUserRoleByEmail
+import { signIn, signUp, getUserRoleByEmail, getUserIdByEmail } from "./aapi.jsx"; // Ensure you import getUserRoleByEmail
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 
@@ -27,16 +27,25 @@ const Home = ({ setIsAuthenticated }) => {
         const response = await signIn(formData);
         const { token } = response.data;
         localStorage.setItem("token", token); // Save token
-        localStorage.setItem("email", formData.email); // Save email for role checking
+        localStorage.setItem("email", formData.email);
+        const user_id = await getUserIdByEmail(localStorage.getItem("email"));
 
+        localStorage.setItem("user_id", user_id.data);
+        console.log(user_id.data);
+         // Save email for role checking
         setIsAuthenticated(true); // Set authentication state
 
         // Fetch user role only after successful login
         const roleResponse = await getUserRoleByEmail(formData.email);
+        localStorage.setItem("role",roleResponse.data);
+
         if (roleResponse.data === "ADMIN") {
           navigate("/admindashboard");
-        } else {
+        } else if (roleResponse.data==="USER"){
           navigate("/dashboard");
+        }
+        else {
+            navigate("/Home")
         }
 
         alert("Welcome!");

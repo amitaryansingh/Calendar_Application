@@ -1,7 +1,9 @@
-/* General Styles */
+General Styles
 .company-dashboard {
     padding: 20px;
     font-family: Arial, sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: black;
 }
 
 h2 {
@@ -15,16 +17,17 @@ h2 {
     justify-content: space-between;
     gap: 10px;
     flex-wrap: wrap;
+    height:70vh;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .company-list-container {
     width: 35%;
-    background-color: #f8f9fa;
+    background-color: #f8f9faa6;
     padding: 12px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
-    max-height: 500px;
 }
 
 .company-item {
@@ -198,6 +201,30 @@ h2 {
 
 .communication-item {
     position: relative; 
+}
+
+.company-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* Adjust spacing between heading and search bar */
+    margin-bottom: 10px;
+    /* Optional: Add some space below the header */
+}
+
+.company-list-header h3 {
+    margin: 0;
+    /* Remove default margin from the heading */
+}
+
+.search-bar {
+    padding: 5px;
+    font-size: 14px;
+    width: 60%;
+    /* Adjust width as needed */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 20px;
 }
 
 /* Responsive Design */

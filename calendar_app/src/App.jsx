@@ -6,6 +6,7 @@ import AdminDashboard from "./Admin/AdminDashborad";
 import Header from "./user/Header";
 import Footer from "./user/Footer";
 import "./App.css";
+import CalendarView from "./user/CalendarView";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
@@ -41,6 +42,7 @@ const App = () => {
             isAuthenticated ? (
               <>
                 <Dashboard />
+                <CalendarView />
                 <Footer />
               </>
             ) : (

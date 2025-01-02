@@ -1,404 +1,233 @@
-// import React, { useState } from 'react';
-// import '../userstyles/Dashboard.css';
-// import { MdEmail } from 'react-icons/md';
-// import { FaLinkedin } from 'react-icons/fa';
-// import { HiDocumentReport } from 'react-icons/hi';
 
-
-// const companies = [
-//     {
-//         name: 'Company A',
-//         logo: 'logo-a.png',
-//         email: 'contact@companya.com',
-//         report: 'Annual Report',
-//         unseenMessageCount: 3,
-//         lastCommunications: [
-//             { 
-//                 type: 'Follow-Up', 
-//                 date: '5th Dec', 
-//                 notes: 'Follow-up on previous meeting.', 
-//                 summary: 'Following up with the client regarding recent meeting.',
-//                 name: 'Chris White', 
-//                 designation: 'Sales Manager', 
-//                 color: '#FF6347'
-//             },
-//         ],
-//         nextCommunication: { 
-//             type: 'Phone Call', 
-//             date: '30th Dec',
-//             name: 'Jane Smith', 
-//             designation: 'Director'
-//         },
-//         status: 'overdue',
-//     },
-//     {
-//         name: 'Company B',
-//         logo: 'logo-b.png',
-//         email: 'contact@companyb.com',
-//         report: 'Quarterly Report',
-//         unseenMessageCount: 0,
-//         lastCommunications: [
-//             { 
-//                 type: 'Meeting', 
-//                 date: '22nd Dec', 
-//                 notes: 'Discussed quarterly goals.', 
-//                 summary: 'Quarterly goals were set for the upcoming quarter.',
-//                 name: 'John Doe', 
-//                 designation: 'Manager',
-//                 color: '#FF4500' // OrangeRed color
-//             }
-//         ],
-//         nextCommunication: { 
-//             type: 'Email', 
-//             date: '25th Dec',
-//             name: 'Alex Johnson', 
-//             designation: 'Lead Developer'
-//         },
-//         status: 'dueToday',
-//     },
-// ];
-
-// const Dashboard = () => {
-//     const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(0);
-//     const [communicationFilter, setCommunicationFilter] = useState(5); // Default to Last 5 Communications
-//     const [hoveredCommunication, setHoveredCommunication] = useState(null); // State for hovered communication
-
-//     const company = companies[selectedCompanyIndex];
-//     const displayedCommunications = company.lastCommunications.slice(0, communicationFilter);
-
-//     return (
-//         <div className="dashboard">
-//             <h2>Company Dashboard</h2>
-//             <div className="main-container">
-            
-
-//             <div className="company-list">
-//     <h3>Company List</h3>
-//     {companies.map((company, index) => (
-//         <div
-//             key={index}
-//             className={`company-item ${index === selectedCompanyIndex ? 'selected' : ''}`}
-//             onClick={() => setSelectedCompanyIndex(index)}
-//         >
-//             <div className="company-left">
-//                 <img 
-//                     src={company.logo} 
-//                     alt={`${company.name} Logo`} 
-//                     className="company-logo" 
-//                     onClick={(e) => { 
-//                         e.stopPropagation();
-//                         // Handle company logo click here
-//                     }} 
-//                 />
-//                 <div className="company-name">{company.name}</div>
-//             </div>
-//             <div className="company-right">
-//                 <MdEmail
-//                     className="icon"
-//                     size={20}
-//                     color="gray"
-//                     onClick={(e) => {
-//                         e.stopPropagation();
-//                         window.location.href = `mailto:${company.email}`;
-//                     }}
-//                 />
-//                 <FaLinkedin
-//                     className="icon"
-//                     size={20}
-//                     color="#0077b5"
-//                     onClick={(e) => {
-//                         e.stopPropagation();
-//                         window.open(`https://www.linkedin.com/company/${company.name}`, '_blank');
-//                     }}
-//                 />
-//                 <HiDocumentReport
-//                     className="icon"
-//                     size={20}
-//                     color="blue"
-//                     onClick={(e) => {
-//                         e.stopPropagation();
-//                         alert(`Opening ${company.report}`);
-//                     }}
-//                 />
-//                  {/* Notification alarm for unseen messages */}
-//             {company.unseenMessageCount >= 0 && (
-//                 <div className="notification-alarm">
-//                     {company.unseenMessageCount}
-//                 </div>
-//             )}
-//             </div>
-           
-//         </div>
-//     ))}
-// </div>
-//                 <div className="communication-details">
-//                     <h3>Communication Details</h3>
-
-//                     {/* Communication Filter Options */}
-//                     <div className="communication-options">
-//                         <button
-//                             className={`filter-button ${communicationFilter === 5 ? 'active' : ''}`}
-//                             onClick={() => setCommunicationFilter(5)}
-//                         >
-//                             Last 5 Communications
-//                         </button>
-//                         <button
-//                             className={`filter-button ${communicationFilter === 10 ? 'active' : ''}`}
-//                             onClick={() => setCommunicationFilter(10)}
-//                         >
-//                             Last 10 Communications
-//                         </button>
-//                         <button
-//                             className={`filter-button ${communicationFilter === company.lastCommunications.length ? 'active' : ''}`}
-//                             onClick={() => setCommunicationFilter(company.lastCommunications.length)}
-//                         >
-//                             All Communications
-//                         </button>
-//                     </div>
-
-//                     <div 
-//                         className={`next-communication highlighted ${company.status === 'overdue' ? 'overdue' : company.status === 'dueToday' ? 'due-today' : ''}`}
-//                     >
-//                         <h3>Next Scheduled Communication</h3>
-//                         <div className="communication-header">
-//                         <div className="communication-left">
-//                         <p>{company.nextCommunication.type} - {company.nextCommunication.date}</p>
-//                         </div>
-//                         <div className="communication-right">
-//                         <p><strong>{company.nextCommunication.name}</strong> - {company.nextCommunication.designation}</p>
-//                         </div>
-//                         </div>
-//                     </div>
-
-//                     <div className="last-communications">
-//                         <h4>Last {communicationFilter} Communications</h4>
-//                         {displayedCommunications.map((comm, idx) => (
-//                             <div
-//                                 key={idx}
-//                                 className={`communication-item ${comm.type.toLowerCase().replace(' ', '-')}`}
-//                                 style={{ borderLeft: `5px solid ${comm.color}` }} 
-//                                 onMouseEnter={() => setHoveredCommunication(comm)}
-//                                 onMouseLeave={() => setHoveredCommunication(null)}
-//                             >
-//                                 <div className="communication-header">
-//                                     <div className="communication-left">
-//                                         <p><strong>{comm.type}</strong> - {comm.date}</p>
-//                                     </div>
-
-//                                     {/* Tooltip Positioning between date and name */}
-//                                     <div className="communication-tooltip-wrapper">
-//                                         <div className="tooltip" style={{ backgroundColor: comm.color }}>{comm.notes}</div>
-//                                     </div>
-
-//                                     <div className="communication-right">
-//                                         <p><strong>{comm.name}</strong> - {comm.designation}</p>
-//                                     </div>
-//                                 </div>
-//                                 <p>{comm.summary}</p>
-//                             </div>
-//                         ))}
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Dashboard;
-
-import React, { useState } from 'react';
-import '../userstyles/Dashboard.css';
-import { MdEmail } from 'react-icons/md';
-import { FaLinkedin } from 'react-icons/fa';
-import { HiDocumentReport } from 'react-icons/hi';
-
-const companies = [
-    {
-        name: 'Company A',
-        logo: 'logo-a.png',
-        email: 'contact@companya.com',
-        report: 'Annual Report',
-        unseenMessageCount: 3,
-        lastCommunications: [
-            { 
-                type: 'Follow-Up', 
-                date: '5th Dec', 
-                notes: 'Follow-up on previous meeting.', 
-                summary: 'Following up with the client regarding recent meeting.',
-                name: 'Chris White', 
-                designation: 'Sales Manager', 
-                color: '#FF6347'
-            },
-        ],
-        nextCommunication: { 
-            type: 'Phone Call', 
-            date: '30th Dec',
-            name: 'Jane Smith', 
-            designation: 'Director'
-        },
-        status: 'overdue',
-    },
-    {
-        name: 'Company B',
-        logo: 'logo-b.png',
-        email: 'contact@companyb.com',
-        report: 'Quarterly Report',
-        unseenMessageCount: 0,
-        lastCommunications: [
-            { 
-                type: 'Meeting', 
-                date: '22nd Dec', 
-                notes: 'Discussed quarterly goals.', 
-                summary: 'Quarterly goals were set for the upcoming quarter.',
-                name: 'John Doe', 
-                designation: 'Manager',
-                color: '#FF4500' // OrangeRed color
-            }
-        ],
-        nextCommunication: { 
-            type: 'Email', 
-            date: '25th Dec',
-            name: 'Alex Johnson', 
-            designation: 'Lead Developer'
-        },
-        status: 'dueToday',
-    },
-];
+import React, { useState, useEffect } from "react";
+import "../userstyles/Dashboard.css";
+import { MdEmail } from "react-icons/md";
+import { FaLinkedin } from "react-icons/fa";
+import { HiDocumentReport } from "react-icons/hi";
+import {
+  getUserProfile,
+  getUserMessagesByCompanyForUser,
+  getCompanyByCompanyIdForUser,
+  getMessagesNotSeenByUserForCompanyforuser, // Import this function for unseen messages
+  markMessageAsSeen // Import the mark as seen function
+} from "../authentication/aapi";
 
 const Dashboard = () => {
-    const [selectedCompanyIndex, setSelectedCompanyIndex] = useState(0);
-    const [communicationFilter, setCommunicationFilter] = useState(5); // Default to Last 5 Communications
-    const [hoveredCommunication, setHoveredCommunication] = useState(null); // State for hovered communication
+  const [companies, setCompanies] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [hoveredCommunication, setHoveredCommunication] = useState(null);
+  const user_id = localStorage.getItem("user_id");
+  const role = localStorage.getItem("role");
+  const [searchQuery, setSearchQuery] = useState("");
 
-    const company = companies[selectedCompanyIndex];
-    const displayedCommunications = company.lastCommunications.slice(0, communicationFilter);
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      console.log("Fetching user profile for user_id:", user_id);
+      try {
+        const profiledata = await getUserProfile(user_id);
+        console.log("Fetched user profile data:", profiledata);
 
-    return (
-        <div className="company-dashboard">
-            <h2>Company Dashboard</h2>
-            <div className="dashboard-container">
-                <div className="company-list-container">
-                    <h3>Company List</h3>
-                    {companies.map((company, index) => (
-                        <div
-                            key={index}
-                            className={`company-item ${index === selectedCompanyIndex ? 'selected-company' : ''}`}
-                            onClick={() => setSelectedCompanyIndex(index)}
-                        >
-                            <div className="company-info">
-                                <img 
-                                    src={company.logo} 
-                                    alt={`${company.name} Logo`} 
-                                    className="company-logo" 
-                                    onClick={(e) => { 
-                                        e.stopPropagation();
-                                    }} 
-                                />
-                                <div className="company-name">{company.name}</div>
-                            </div>
-                            <div className="company-actions">
-                                <MdEmail
-                                    className="icon"
-                                    size={20}
-                                    color="gray"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        window.location.href = `mailto:${company.email}`;
-                                    }}
-                                />
-                                <FaLinkedin
-                                    className="icon"
-                                    size={20}
-                                    color="#0077b5"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        window.open(`https://www.linkedin.com/company/${company.name}`, '_blank');
-                                    }}
-                                />
-                                <HiDocumentReport
-                                    className="icon"
-                                    size={20}
-                                    color="blue"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        alert(`Opening ${company.report}`);
-                                    }}
-                                />
-                                {company.unseenMessageCount > 0 && (
-                                    <div className="notification-badge">
-                                        {company.unseenMessageCount}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                <div className="communication-details-container">
-                    <h3>Communication Details</h3>
-                    <div className="communication-filter-options">
-                        <button
-                            className={`filter-button ${communicationFilter === 5 ? 'active' : ''}`}
-                            onClick={() => setCommunicationFilter(5)}
-                        >
-                            Last 5 Communications
-                        </button>
-                        <button
-                            className={`filter-button ${communicationFilter === 10 ? 'active' : ''}`}
-                            onClick={() => setCommunicationFilter(10 )}
-                        >
-                            Last 10 Communications
-                        </button>
-                        <button
-                            className={`filter-button ${communicationFilter === company.lastCommunications.length ? 'active' : ''}`}
-                            onClick={() => setCommunicationFilter(company.lastCommunications.length)}
-                        >
-                            All Communications
-                        </button>
-                    </div>
+        const companiesArray = profiledata.data.companies;
+        console.log("Companies array from profile data:", companiesArray);
 
-                    <div 
-                        className={`next-communication-highlighted ${company.status === 'overdue' ? 'overdue' : company.status === 'dueToday' ? 'due-today' : ''}`}
-                    >
-                        <h3>Next Scheduled Communication</h3>
-                        <div className="communication-header">
-                            <div className="communication-left">
-                                <p>{company.nextCommunication.type} - {company.nextCommunication.date}</p>
-                            </div>
-                            <div className="communication-right">
-                                <p><strong>{company.nextCommunication.name}</strong> - {company.nextCommunication.designation}</p>
-                            </div>
-                        </div>
-                    </div>
+        if (Array.isArray(companiesArray)) {
+          const companyDataPromises = companiesArray.map(async (company) => {
+            try {
+              console.log(`Fetching data for company mid: ${company.mid}`);
+              const response = await getCompanyByCompanyIdForUser(company.mid);
+              const unseenMessages = await getMessagesNotSeenByUserForCompanyforuser(
+                user_id,
+                company.mid
+              );
 
-                    <div className="last-communications-list">
-                        <h4>Last {communicationFilter} Communications</h4>
-                        {displayedCommunications.map((comm, idx) => (
-                            <div
-                                key={idx}
-                                className={`communication-item ${comm.type.toLowerCase().replace(' ', '-')}`}
-                                style={{ borderLeft: `5px solid ${comm.color}` }} 
-                                onMouseEnter={() => setHoveredCommunication(comm)}
-                                onMouseLeave={() => setHoveredCommunication(null)}
-                            >
-                                <div className="communication-header">
-                                    <div className="communication-left">
-                                        <p><strong>{comm.type}</strong> - {comm.date}</p>
-                                    </div>
-                                    <div className="communication-right">
-                                        <p><strong>{comm.name}</strong> - {comm.designation}</p>
-                                    </div>
-                                </div>
-                                <p>{comm.summary}</p>
-                                {hoveredCommunication === comm && (
-                                    <div className="tooltip" style={{ backgroundColor: comm.color }}>{comm.notes}</div>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                </div>
+              return {
+                ...response.data,
+                unseenMessagesCount: unseenMessages.data.length,
+              };
+            } catch (err) {
+              console.error(`Error fetching data for company mid ${company.mid}:`, err);
+              return null;
+            }
+          });
+
+          const allCompanyData = await Promise.all(companyDataPromises);
+          const validCompanies = allCompanyData.filter((data) => data !== null);
+          console.log("Final combined companies data:", validCompanies);
+
+          setCompanies(validCompanies);
+        } else {
+          console.error("Companies data is not an array:", companiesArray);
+        }
+      } catch (err) {
+        console.error("Error fetching user profile:", err);
+      }
+    };
+
+    fetchUserProfile();
+  }, [user_id]);
+
+  const filteredCompanies = companies.filter((company) =>
+    company.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const fetchMessages = async (companyId) => {
+    console.log("Fetching messages for company ID:", companyId);
+    try {
+      const response = await getUserMessagesByCompanyForUser(user_id, companyId);
+      console.log("Fetched messages:", response.data);
+      if (response && response.data) {
+        setMessages(response.data);
+      } else {
+        console.error("Unexpected response structure:", response);
+      }
+    } catch (err) {
+      console.error("Error fetching messages:", err);
+    }
+  };
+
+  const handleMarkAsSeen = async (messageId) => {
+    try {
+      await markMessageAsSeen(messageId, user_id);
+      console.log(`Message with ID ${messageId} marked as seen.`);
+    } catch (err) {
+      console.error("Error marking message as seen:", err);
+    }
+  };
+
+  return (
+    <div className="company-dashboard">
+      <h2>Company Dashboard</h2>
+      <div className="dashboard-container">
+<div className="company-list-container">
+          <div className="company-list-header">
+            <h3>Company List</h3>
+            <input
+              type="text"
+              placeholder="Search companies..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-bar"
+            />
+          </div>
+          {filteredCompanies.map((company, index) => (
+            <div
+              key={index}
+              className="company-item"
+              onClick={() => fetchMessages(company.mid)}
+            >
+              <div className="company-info">
+                <img
+                  src={company.logoUrl}
+                  alt={`${company.name} Logo`}
+                  className="company-logo"
+                />
+                <div className="company-name">{company.name}</div>
+                <div className="company-location">{company.location}</div>
+              </div>
+              <div className="company-actions">
+                <MdEmail
+                  className="icon"
+                  size={20}
+                  color="gray"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.location.href = `mailto:${company.emails}`;
+                  }}
+                />
+                <FaLinkedin
+                  className="icon"
+                  size={20}
+                  color="#0077b5"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(
+                      `https://www.linkedin.com/company/${company.name}`,
+                      "_blank"
+                    );
+                  }}
+                />
+                <HiDocumentReport
+                  className="icon"
+                  size={20}
+                  color="blue"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    alert(`Opening ${company.report}`);
+                  }}
+                />
+                {company.unseenMessagesCount > 0 && (
+                  <div className="notification-badge">
+                    {company.unseenMessagesCount}
+                  </div>
+                )}
+              </div>
             </div>
+          ))}
         </div>
-    );
+
+        <div className="communication-details-container">
+  <h3>Communication Details</h3>
+  {messages.length > 0 ? (
+    <div className="last-communications-list">
+      {messages.map((comm, idx) => {
+        // Determine the color based on seen status and message date
+        let borderColor = "#ccc"; // Default color
+        if (!comm?.seen) {
+          borderColor = "#ff6b6b"; // Red for unseen messages
+        } else if (comm?.status === "overdue") {
+          borderColor = "#d9534f"; // Red for overdue communications
+        } else if (comm?.status === "dueToday") {
+          borderColor = "#f0ad4e"; // Yellow for due today
+        } else if (comm?.status === "completed") {
+          borderColor = "#5cb85c"; // Green for completed communications
+        }
+
+        return (
+          <div
+            key={idx}
+            className={`communication-item ${
+              comm?.type ? comm.type.toLowerCase().replace(" ", "-") : "unknown-type"
+            } ${
+              comm?.status === "overdue"
+                ? "overdue"
+                : comm?.status === "dueToday"
+                ? "due-today"
+                : ""
+            }`}
+            style={{ borderLeft: `5px solid ${borderColor}` }}
+            onMouseEnter={() => setHoveredCommunication(comm)}
+            onMouseLeave={() => setHoveredCommunication(null)}
+          >
+            <div className="communication-header">
+              <div className="communication-left">
+                <p>
+                  <strong>{comm?.name || "Unknown"} {comm?.priorityLevel}</strong> - {comm?.date || "No Date"}
+                </p>
+              </div>
+              <div className="communication-right">
+                <p>
+                  <strong>{comm?.clientName || "Unknown"}</strong> - {comm?.designation || "No Designation"}
+                </p>
+              </div>
+            </div>
+            <p>{comm?.description || "No Summary Available"}</p>
+            {hoveredCommunication === comm && (
+              <div className="tooltip" style={{ backgroundColor: borderColor }}>
+                {comm?.notes || "No Notes Available"}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  ) : (
+    <p>No communications available.</p>
+  )}
+</div>
+
+      </div>
+    </div>
+  );
 };
 
 export default Dashboard;
+
