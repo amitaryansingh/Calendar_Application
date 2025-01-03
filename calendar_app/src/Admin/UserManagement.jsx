@@ -82,6 +82,62 @@ const UserManagement = () => {
     );
   }, [companySearchTerm, companies]);
 
+  // const handleSave = async () => {
+  //   try {
+  //     const userToSave = {
+  //       firstname: userForm.firstname,
+  //       secondname: userForm.secondname,
+  //       email: userForm.email,
+  //       password: userForm.password,
+  //       role: userForm.role,
+  //     };
+
+  //     // Handle the case of updating an existing user
+  //     if (editingUser) {
+  //       const updatedUserResponse = await updateUser(editingUser.uid, userToSave);
+
+  //       // Only update company assignments if needed
+  //       const newCompanyIds = userForm.assignedCompanies.map((company) => company.mid);
+  //       const removedCompanyIds = removedCompanies.map((company) => company.mid);
+
+  //       // Call the remove company API for the removed companies
+  //       if (removedCompanyIds.length > 0) {
+  //         for (const companyId of removedCompanyIds) {
+  //           await removeCompanyFromUser(editingUser.uid, companyId);
+  //         }
+  //       }
+
+  //       // Assign the new companies to the user if needed
+  //       if (newCompanyIds.length > 0) {
+  //         await assignMultipleCompaniesToUser(editingUser.uid, newCompanyIds);
+  //       }
+
+  //       // Update the local state after saving changes
+  //       setUsers((prevUsers) =>
+  //         prevUsers.map((user) =>
+  //           user.uid === editingUser.uid ? updatedUserResponse.data : user
+  //         )
+  //       );
+
+  //       setSuccess("User updated successfully!");
+
+  //       // Fetch the updated user data to reflect the change
+  //       const updatedUser = await getAllUsers();
+  //       setUsers(updatedUser.data);
+  //     } else {
+  //       // Handle the case of creating a new user
+  //       const newUserResponse = await createUser(userToSave);
+  //       setUsers((prevUsers) => [...prevUsers, newUserResponse.data]);
+  //       setSuccess("User created successfully!");
+  //     }
+
+  //     resetForm();
+  //   } catch (err) {
+  //     console.error("Error saving user:", err.response || err.message);
+  //     setError(err.response?.data?.message || "Error saving user.");
+  //   }
+  // };
+
   const handleSave = async () => {
     try {
       const userToSave = {
@@ -91,37 +147,49 @@ const UserManagement = () => {
         password: userForm.password,
         role: userForm.role,
       };
-
-      // Handle the case of updating an existing user
+  
       if (editingUser) {
         const updatedUserResponse = await updateUser(editingUser.uid, userToSave);
-
-        // Only update company assignments if needed
+  
+        // Extract the current assigned company IDs from the editing user
+        const currentCompanyIds = editingUser.companies
+          ? editingUser.companies.map((company) => company.mid)
+          : [];
+  
+        // Extract the new assigned company IDs from the form
         const newCompanyIds = userForm.assignedCompanies.map((company) => company.mid);
-        const removedCompanyIds = removedCompanies.map((company) => company.mid);
-
-        // Call the remove company API for the removed companies
-        if (removedCompanyIds.length > 0) {
-          for (const companyId of removedCompanyIds) {
+  
+        // Determine which companies are newly added
+        const companiesToAdd = newCompanyIds.filter(
+          (id) => !currentCompanyIds.includes(id)
+        );
+  
+        // Determine which companies are removed
+        const companiesToRemove = currentCompanyIds.filter(
+          (id) => !newCompanyIds.includes(id)
+        );
+  
+        // Remove companies that are no longer assigned
+        if (companiesToRemove.length > 0) {
+          for (const companyId of companiesToRemove) {
             await removeCompanyFromUser(editingUser.uid, companyId);
           }
         }
-
-        // Assign the new companies to the user if needed
-        if (newCompanyIds.length > 0) {
-          await assignMultipleCompaniesToUser(editingUser.uid, newCompanyIds);
+  
+        // Assign newly added companies
+        if (companiesToAdd.length > 0) {
+          await assignMultipleCompaniesToUser(editingUser.uid, companiesToAdd);
         }
-
-        // Update the local state after saving changes
+  
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
             user.uid === editingUser.uid ? updatedUserResponse.data : user
           )
         );
-
+  
         setSuccess("User updated successfully!");
-
-        // Fetch the updated user data to reflect the change
+  
+        // Fetch the updated user data to reflect the changes
         const updatedUser = await getAllUsers();
         setUsers(updatedUser.data);
       } else {
@@ -130,13 +198,14 @@ const UserManagement = () => {
         setUsers((prevUsers) => [...prevUsers, newUserResponse.data]);
         setSuccess("User created successfully!");
       }
-
+  
       resetForm();
     } catch (err) {
       console.error("Error saving user:", err.response || err.message);
       setError(err.response?.data?.message || "Error saving user.");
     }
   };
+  
 
   const handleEdit = (user) => {
     setEditingUser(user);

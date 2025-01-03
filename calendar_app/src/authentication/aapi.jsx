@@ -19,12 +19,19 @@ export const getUserIdByEmail = (email) => API.get(`/userReq/user/id`, { params:
 export const markMessageAsSeen = (messageId, userId) => 
   API.put(`/userReq/messages/${messageId}/seen`, null, { params: { userId } });
 
+export const getSeenStatusByMessageIDAndUserID = (messageId, userId) => 
+  API.get(`/userReq/messages/seenstatus?messageId=${messageId}&userId=${userId}`);
+
+export const updateSeenStatus = (messageId, userId, seen) =>
+  API.put(`/userReq/messages/status?messageId=${messageId}&userId=${userId}&seen=${seen}`);
 
 // User profile and company-related functions
 export const getUserProfile = (id) => API.get(`/userReq/profile/${id}`);
 
 export const getUnseenMessagesByUser = (userId) => API.get(`/userReq/messages/unseen/${userId}`);
 
+export const getMessagesNotSeenByUserForCompanyforuser = (userId, companyId) => 
+  API.get(`/userReq/messages/user-company-not-seen`, { params: { userId, companyId } });
 
 export const getCompanyByCompanyIdForUser  = (id) => API.get(`/userReq/companies/${id}`);
 
@@ -53,9 +60,6 @@ export const getMessagesBySeenStatusForUser  = (seen) =>
 export const getMessagesWithinDateRangeForUser  = (startDate, endDate) => 
   API.get(`/userReq/message/date-range`, { params: { startDate, endDate } });
 
-
-export const getMessagesNotSeenByUserForCompanyforuser = (userId, companyId) => 
-  API.get(`/userReq/messages/user-company-not-seen`, { params: { userId, companyId } });
 
 
 // Export API functions for authentication
