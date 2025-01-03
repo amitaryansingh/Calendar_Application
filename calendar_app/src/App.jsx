@@ -5,7 +5,6 @@ import Dashboard from "./user/Dashboard";
 import AdminDashboard from "./Admin/AdminDashborad";
 import Header from "./user/Header";
 import Footer from "./user/Footer";
-import Report from "./user/Report";
 import "./App.css";
 import CalendarView from "./user/CalendarView";
 
@@ -44,7 +43,6 @@ const App = () => {
               <>
                 <Dashboard />
                 <CalendarView />
-                <Report />
                 <Footer />
               </>
             ) : (

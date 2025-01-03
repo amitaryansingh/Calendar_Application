@@ -11,6 +11,26 @@
     border: 2px solid black;
   }
   
+/* In your CSS (CalendarView.css) */
+.event-title {
+  font-size: 0.9rem; /* Smaller font size */
+  font-weight: bold; /* Bold font weight */
+  color: #333; /* Darker color for better contrast */
+  text-transform: capitalize; /* Capitalize each word */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.event-title:hover {
+  color: #007bff; /* Change color on hover */
+  transform: scale(1.05); /* Slightly scale up the event name */
+}
+
+/* Optional: Add a small shadow effect to make it stand out */
+.event-title {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
   .company-info {
     display: flex;
     align-items: center;

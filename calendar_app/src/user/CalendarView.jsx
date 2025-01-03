@@ -130,6 +130,7 @@
 
 // export default CalendarView;
 
+
 import React, { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
@@ -140,6 +141,7 @@ import {
   getUnseenMessagesByUser,
   getMessagesByUserIdForUser,
   getCompanyByCompanyIdForUser,
+  getSeenStatusByMessageIDAndUserID,
 } from "../authentication/aapi";
 
 const localizer = momentLocalizer(moment);
@@ -151,7 +153,6 @@ const CalendarView = () => {
   const [popupContent, setPopupContent] = useState(null);
 
   const handleEventClick = (event) => {
-    // Group all events by the same date when clicked
     const selectedEvents = events.filter(
       (e) => moment(e.start).isSame(moment(event.start), "day")
     );
@@ -164,30 +165,22 @@ const CalendarView = () => {
       try {
         const user_id = localStorage.getItem("user_id");
 
-        // Fetch user profile
         const profile = await getUserProfile(user_id);
         setUserProfile(profile);
 
-        // Fetch unseen messages
-        const unseenMessagesResponse = await getUnseenMessagesByUser(user_id);
-        const unseenMessages = Array.isArray(unseenMessagesResponse.data)
-          ? unseenMessagesResponse.data
-          : [];
-
-        // Fetch all messages
         const allMessagesResponse = await getMessagesByUserIdForUser(user_id);
         const allMessages = Array.isArray(allMessagesResponse.data)
           ? allMessagesResponse.data
           : [];
 
-        // Format events
         const formattedEvents = await Promise.all(
           allMessages.map(async (message) => {
-            const isUnseen = unseenMessages.some(
-              (unseen) => unseen.messageId === message.messageId
+            const seenStatusResponse = await getSeenStatusByMessageIDAndUserID(
+              message.messageId,
+              user_id
             );
+            const isSeen = seenStatusResponse.data;
 
-            // Fetch company details
             const companyDetails = await getCompanyByCompanyIdForUser(
               message.companyId
             );
@@ -198,7 +191,7 @@ const CalendarView = () => {
               start: new Date(message.date),
               end: new Date(message.date),
               allDay: true,
-              color: isUnseen ? "#ba8e23" : "#90EE90",
+              isSeen,
               message,
               company: companyDetails || {},
             };
@@ -215,16 +208,43 @@ const CalendarView = () => {
   }, []);
 
   const eventPropGetter = (event) => ({
-    style: { backgroundColor: event.color },
+    style: { backgroundColor: event.isSeen ? "#90EE90" : "#ba8e23" },
   });
 
   const dayPropGetter = (date) => {
-    const dateString = moment(date).format("YYYY-MM-DD");
-    const hasEvent = events.some(
-      (event) => moment(event.start).format("YYYY-MM-DD") === dateString
+    const today = moment().startOf("day");
+    const eventsOnDate = events.filter((event) =>
+      moment(event.start).isSame(moment(date), "day")
     );
-    return hasEvent ? { style: { border: "1px solid black" } } : {};
+  
+    if (eventsOnDate.length > 0) {
+      const hasUnseenPastEvents = eventsOnDate.some(
+        (event) => !event.isSeen && moment(event.start).isBefore(today)
+      );
+      const hasUnseenTodayEvents = eventsOnDate.some(
+        (event) => !event.isSeen && moment(event.start).isSame(today, "day")
+      );
+      const hasFutureEvents = eventsOnDate.some((event) =>
+        moment(event.start).isAfter(today)
+      );
+  
+      if (hasUnseenPastEvents) {
+        return { style: { border: "3px solid #ff0000" } }; // Red border for unseen past
+      }
+  
+      if (hasUnseenTodayEvents) {
+        return { style: { border: "3px solid #ffcc00" } }; // Yellow border for unseen today
+      }
+  
+      if (hasFutureEvents) {
+        return { style: { border: "3px solid #007bff" } }; // Blue border for future
+      }
+    }
+  
+    return {};
   };
+  
+  
 
   return (
     <div className="calendar-container">
@@ -240,44 +260,47 @@ const CalendarView = () => {
         onSelectEvent={handleEventClick}
       />
 
-{showPopup && popupContent && popupContent.length > 0 && (
-  <div className="popup">
-    <div className="popup-body">
-      {popupContent.map((event) => (
-        <div key={event.id} className="popup-section">
-          <div className="company-info">
-            {event.company?.data?.logoUrl && (
-              <img
-                src={event.company.data.logoUrl}
-                alt={event.company.data.name || "Company Logo"}
-                className="company-logo"
-              />
-            )}
-            <h3>{event.company?.data?.name || "No Company Info"}</h3>
+      {showPopup && popupContent && popupContent.length > 0 && (
+        <div className="popup">
+          <div className="popup-body">
+            {popupContent.map((event) => (
+              <div key={event.id} className="popup-section">
+                <div className="company-info">
+                  {event.company?.data?.logoUrl && (
+                    <img
+                      src={event.company.data.logoUrl}
+                      alt={event.company.data.name || "Company Logo"}
+                      className="company-logo"
+                    />
+                  )}
+                  <h3>{event.company?.data?.name || "No Company Info"}</h3>
+                </div>
+                <div className="message-details">
+                  <p>
+                    <strong>Message:</strong>{" "}
+                    {event.message.description || "No description available"}
+                  </p>
+                  <p>
+                    <strong>Date:</strong> {event.message.date || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Priority:</strong>{" "}
+                    {event.message.priorityLevel || "Normal"}
+                  </p>
+                  <p>
+                    <strong>Sender:</strong> {event.message.clientName || "Unknown"}{" "}
+                    {event.message.designation || "N/A"}
+                  </p>
+                </div>
+                <hr />
+              </div>
+            ))}
           </div>
-          <div className="message-details">
-            <p>
-              <strong>Message:</strong> {event.message.description || "No description available"}
-            </p>
-            <p>
-              <strong>Date:</strong> {event.message.date || "N/A"}
-            </p>
-            <p>
-              <strong>Priority:</strong> {event.message.priorityLevel || "Normal"}
-            </p>
-            <p>
-              <strong>Sender:</strong> {event.message.clientName || "Unknown"} {event.message.designation || "N/A"}
-            </p>
-          </div>
-          <hr />
+          <button onClick={() => setShowPopup(false)} className="close-popup-btn">
+            Close
+          </button>
         </div>
-      ))}
-    </div>
-    <button onClick={() => setShowPopup(false)} className="close-popup-btn">Close</button>
-  </div>
-)}
-
-
+      )}
     </div>
   );
 };

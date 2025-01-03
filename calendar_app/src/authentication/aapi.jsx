@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:9090/calendarapp", // Base URL for the API
+  baseURL: "https://calendarapp-enbkecf7fzchaqe6.centralindia-01.azurewebsites.net/calendarapp", // Base URL for the API
   withCredentials: true,
 });
 
@@ -27,6 +27,8 @@ export const updateSeenStatus = (messageId, userId, seen) =>
 
 // User profile and company-related functions
 export const getUserProfile = (id) => API.get(`/userReq/profile/${id}`);
+
+export const getUserCompaniesforuser = (userId) => API.get(`/users/${userId}/companies`);
 
 export const getUnseenMessagesByUser = (userId) => API.get(`/userReq/messages/unseen/${userId}`);
 
