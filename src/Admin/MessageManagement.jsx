@@ -216,14 +216,16 @@ const MessageManagement = () => {
       <div className="form">
   <h3>{editingMessage ? "Edit Message" : "Add New Message"}</h3>
 
-  <label>Name</label>
-  <input
-    type="text"
-    placeholder="Message Name"
-    value={messageForm.name}
-    onChange={(e) => setMessageForm({ ...messageForm, name: e.target.value })}
-  />
-
+  <select value={messageForm.name}
+          onChange={(e) => setMessageForm({ ...messageForm, name: e.target.value })}
+        >
+          <option value="">Select Message Type</option>
+          <option value="LINKEDIN_POST">LinkedIn Post</option>
+          <option value="LINKEDIN_MESSAGE">LinkedIn Message</option>
+          <option value="EMAIL">Email</option>
+          <option value="PHONE_CALL">Phone Call</option>
+          <option value="OTHER">Other</option>
+        </select>
   <label>Description</label>
   <textarea
     placeholder="Message Description"
