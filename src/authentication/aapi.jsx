@@ -25,6 +25,8 @@ export const getSeenStatusByMessageIDAndUserID = (messageId, userId) =>
 export const updateSeenStatus = (messageId, userId, seen) =>
   API.put(`/userReq/messages/status?messageId=${messageId}&userId=${userId}&seen=${seen}`);
 
+export const updateUserProfile = (id, userData) => API.put(`/userReq/editprofile/${id}`, userData);
+
 // User profile and company-related functions
 export const getUserProfile = (id) => API.get(`/userReq/profile/${id}`);
 

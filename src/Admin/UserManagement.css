@@ -10,17 +10,61 @@ h2 {
   margin-bottom: 20px;
 }
 
-.search-bar {
-  margin-bottom: 20px;
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 12vh; /* Ensure it takes full viewport height */
 }
 
-.search-bar input {
-  width: 100%;
+.search-bar {
+  width: 80%; /* Make the search bar take up most of the width */
+  max-width: 500px; /* Set a maximum width */
   padding: 10px;
   font-size: 16px;
-  border: 1px solid #ccc;
   border-radius: 5px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+.search-bar:focus {
+  outline: none;
+  border-color: #4CAF50; /* Change border color on focus */
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Add a focus shadow */
+}
+
+.assigned-companies-list {
+  max-height: 200px; /* Adjust based on the height you want */
+  overflow-y: scroll; /* Makes the list scrollable */
+  margin-top: 10px;
+}
+
+.assigned-companies-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.assigned-companies-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.assigned-companies-list button {
+  background-color: #dc3545;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+jsx
+Copy code
+
 
 .user-list table {
   width: 100%;
@@ -125,4 +169,40 @@ h2 {
 
 .cancel-button:hover {
   background-color: #5a6268;
+}
+.company-search {
+  margin-top: -57px;
+}
+
+.company-search input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.company-search ul {
+  max-height: 200px; /* Adjust based on your preference */
+  overflow-y: scroll;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  border-top: 1px solid #ddd;
+}
+
+.company-search li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.company-search button {
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }

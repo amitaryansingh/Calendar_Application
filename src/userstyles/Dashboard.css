@@ -279,3 +279,54 @@ h2 {
         padding: 8px;
     }
 }
+.communication-filter-options {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px; /* Optional: Adds space between the buttons */
+    flex-wrap: wrap; /* Ensures they wrap if there's not enough space */
+  }
+  
+  .filter-button {
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .filter-button.active {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .filter-button:hover {
+    background-color: #f0f0f0;
+  }
+  .priority-filter {
+    margin-top: 15px;
+  }
+  
+  .filter-dropdown {
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  .filter-button {
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .filter-button.active {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .filter-button:hover {
+    background-color: #f0f0f0;
+  }
+    

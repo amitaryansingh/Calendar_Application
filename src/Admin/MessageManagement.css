@@ -1,195 +1,518 @@
-.message-management {
-    font-family: 'Roboto', Arial, sans-serif;
-    padding: 20px;
-    max-width: 1200px;
-    margin: auto;
-    color: #333;
-    background-color: #f5f6fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+/* Global styles */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+h2, h3 {
+  color: #333;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+h4 {
+  color: #555;
+  font-weight: 500;
+}
+
+button {
+  background-color: #1e88e5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #1976d2;
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  background-color: #b0bec5;
+  cursor: not-allowed;
+}
+
+/* Table styles */
+.message-list {
+  margin: 30px 0;
+}
+
+.message-list table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(to top, #ffffff, #f1f3f8);
+  border: 1px solid #ddd; /* Border for the whole table */
+}
+
+.message-list th,
+.message-list td {
+  padding: 15px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.message-list th {
+  background-color: #2196f3;
+  color: #fff;
+  border-right: 1px solid #ddd; /* Vertical line between header columns */
+}
+
+.message-list td {
+  border-bottom: 1px solid #ddd; /* Horizontal line between rows */
+}
+
+.message-list tr:hover {
+  background-color: #f4f7fa;
+}
+
+.message-list td button {
+  background-color: #4caf50;
+  color: white;
+  padding: 8px 12px;
+  font-size: 12px;
+  border-radius: 3px;
+  margin-right: 5px;
+}
+
+.message-list td button:hover {
+  background-color: #45a049;
+}
+
+.message-list td button:last-child {
+  background-color: #f44336;
+}
+
+.message-list td button:last-child:hover {
+  background-color: #e53935;
+}
+
+/* Form styles */
+.form {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  border-top: 1px solid #ddd; /* Horizontal line at the top of the form */
+  border-bottom: 1px solid #ddd; /* Horizontal line at the bottom of the form */
+}
+
+.form h3 {
+  color: #1e88e5;
+  margin-bottom: 20px;
+}
+
+.form select,
+.form input,
+.form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.form input[type="checkbox"] {
+  width: auto;
+}
+
+.form textarea {
+  max-height:15px;
+  resize: vertical;
+}
+
+.form button {
+  background-color: #1e88e5;
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  font-size: 14px;
+  border-radius: 5px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.form button:hover {
+  background-color: #1976d2;
+  transform: translateY(-2px);
+}
+
+/* Modal styles */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.4s ease-in-out;
+  border: 1px solid #ddd; /* Border around the modal */
+}
+
+.modal .close {
   
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #007bff;
-    font-size: 24px;
-    font-weight: 700;
-  }
-  
-  .search-bar {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .search-bar input {
-    width: 100%;
-    max-width: 500px;
-    padding: 12px 20px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 30px;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
+  position: relative;
+    top: 10px;
+    right: -470px;
+    font-size: 30px;
+  font-weight: bold;
+  color: red;
+  cursor: pointer;
+}
+
+.modal .close:hover {
+  color: #2196f3;
+}
+
+.modal ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.modal li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd; /* Horizontal line between list items */
+}
+
+.modal li input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.modal button {
+  background-color: #1e88e5;
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  border-radius: 5px;
+  color: white;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.modal button:hover {
+  background-color: #1976d2;
+  transform: translateY(-2px);
+}
+
+/* Error and success message styles */
+.error, .success {
+  padding: 15px;
+  color: white;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.error {
+  background-color: #f44336;
+}
+
+.success {
+  background-color: #4caf50;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .message-list table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 12px;
   }
-  
-  .message-list th, .message-list td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .message-list th {
-    background-color: #f1f3f6;
-    color: #555;
-    font-size: 14px;
-    text-transform: uppercase;
-  }
-  
-  .message-list td {
-    font-size: 14px;
-    color: #333;
-  }
-  
-  .message-list button {
-    padding: 8px 15px;
-    margin: 2px;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
+
   .form {
-    background-color: #ffffff;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
+    padding: 20px;
   }
-  
-  .form h3 {
-    margin-bottom: 20px;
-    font-size: 20px;
-    font-weight: 600;
-    color: #007bff;
+
+  .form select,
+  .form input,
+  .form textarea {
+    font-size: 12px;
   }
-  
-  .form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+
+  .modal-content {
+    width: 90%;
   }
-  
-  .form-grid input,
-  .form-grid textarea,
-  .form-grid select {
-    width: 100%;
-    padding: 12px 15px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .form-grid input:focus,
-  .form-grid textarea:focus,
-  .form-grid select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-  }
-  
-  .user-search {
-    margin-top: 20px;
-  }
-  
-  .user-search input {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    transition: all 0.3s ease;
-  }
-  
-  .user-search input:focus {
-    outline: none;
-    border-color: #007bff;
-  }
-  
-  .user-search ul {
-    list-style: none;
-    padding: 0;
-    max-height: 150px; /* Limit list to a specific height */
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #ffffff;
-  }
-  
-  .user-search li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .user-search li:last-child {
-    border-bottom: none; /* Remove border from the last item */
-  }
-  
-  .user-search li button {
-    padding: 5px 10px;
-    font-size: 14px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .user-search li button:hover {
-    background-color: #0056b3;
-  }
-  
+
   button {
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    padding: 8px 16px;
+    font-size: 12px;
   }
-  
-  button:hover {
-    background-color: #218838;
+}
+
+/* Animation for Modal */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  .error {
-    color: #dc3545;
-    text-align: center;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .success {
-    color: #28a745;
-    text-align: center;
-  }
+}
+/* Table styles */
+.message-list {
+  margin: 30px 0;
+}
+
+.message-list table {
+  width: 100%;
+  border-collapse: collapse; /* Ensures borders appear between cells */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(to top, #ffffff, #f1f3f8);
+  border: 1px solid #ddd; /* Border for the whole table */
+}
+
+.message-list th,
+.message-list td {
+  padding: 15px;
+  text-align: left;
+  font-size: 14px;
+  border-right: 1px solid #ddd; /* Vertical line between columns */
+}
+
+.message-list th {
+  background-color: #2196f3;
+  color: #fff;
+  border-bottom: 2px solid #ddd; /* Horizontal line between header and rows */
+}
+
+.message-list td {
+  border-bottom: 1px solid #ddd; /* Horizontal line between rows */
+}
+
+.message-list tr:hover {
+  background-color: #f4f7fa;
+}
+
+.message-list td button {
+  background-color: #4caf50;
+  color: white;
+  padding: 8px 12px;
+  font-size: 12px;
+  border-radius: 3px;
+  margin-right: 5px;
+}
+
+.message-list td button:hover {
+  background-color: #45a049;
+}
+
+.message-list td button:last-child {
+  background-color: #f44336;
+}
+
+.message-list td button:last-child:hover {
+  background-color: #e53935;
+}
+.message-list {
+  margin: 30px 0;
+  max-height: 400px; /* Set a fixed height */
+  overflow-y: auto;  /* Enable vertical scrolling */
+}
+
+.message-list table {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background: linear-gradient(to top, #ffffff, #f1f3f8);
+  border: 1px solid #ddd;
+}
+
+.message-list th,
+.message-list td {
+  padding: 15px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.message-list th {
+  background-color: #2196f3;
+  color: #fff;
+}
+
+.message-list tr:hover {
+  background-color: #f4f7fa;
+}
+
+.message-list td button {
+  background-color: #4caf50;
+  color: white;
+  padding: 8px 12px;
+  font-size: 12px;
+  border-radius: 3px;
+  margin-right: 5px;
+}
+
+.message-list td button:hover {
+  background-color: #45a049;
+}
+
+.message-list td button:last-child {
+  background-color: #f44336;
+}
+
+.message-list td button:last-child:hover {
+  background-color: #e53935;
+}
+
+.form {
+  margin-top: 20px;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.form input,
+.form select,
+.form textarea {
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.reset-btn {
+  background-color: #ff5722;
+  color: white;
+}
+
+.success {
+  color: green;
+  font-size: 16px;
+}
+
+.error {
+  color: red;
+  font-size: 16px;
+}
+
+.assign-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.assign-modal > div {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+}
+
+button {
+  padding: 8px 16px;
+  background-color: #2196f3;
+  color: white;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0b7dda;
+}
+.message-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+.message-details-table td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+}
+
+.message-details-table td:first-child {
+  font-weight: bold;
+  background-color: #f9f9f9;
+  width: 30%;
+}
+/* User Select Dropdown - Scrollable with 4 default values */
+.user-select-container {
+  max-height: 300px; /* Set the max height for the scrollable area */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 1px solid #ddd; /* Optional: Add a border for better visibility */
+  padding: 5px; /* Optional: Add padding for spacing */
+  background-color: #f9f9f9; /* Optional: Set a background color */
+  border-radius: 5px; /* Optional: Add rounded corners */
+}
+
+.user-select {
+  width: 100%;
+  height: 150px; /* Set a fixed height for the select box */
+  overflow-y: auto; /* Allow scrolling inside the select box */
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.user-select option {
+  font-size: 14px;
+  padding: 5px;
+}
+
+/* User Grid - Scrollable */
+.user-grid-container {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 5px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+/* User Grid */
+.user-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.user-item label {
+  margin-left: 5px;
+  font-size: 14px;
+}

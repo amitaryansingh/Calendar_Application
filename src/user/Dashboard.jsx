@@ -61,13 +61,12 @@ const Dashboard = () => {
 
     fetchCompanies();
   }, [user_id]);
-
   const fetchMessages = async (companyId, filterType) => {
     setLoadingMessages(true);
     try {
       let response = await getUserMessagesByCompanyForUser(user_id, companyId);
       let messagesList = response.data;
-
+  
       if (filterType === "last5") {
         messagesList = messagesList
           .filter((msg) => new Date(msg.date) < new Date())
@@ -75,8 +74,12 @@ const Dashboard = () => {
           .slice(0, 5);
       } else if (filterType === "upcoming") {
         messagesList = messagesList.filter((msg) => new Date(msg.date) > new Date());
+      } else if (filterType === "unseen") {
+        messagesList = messagesList.filter((msg) => !msg.seen);
+      } else if (filterType === "overdue") {
+        messagesList = messagesList.filter((msg) => new Date(msg.date) < new Date() && !msg.seen);
       }
-
+  
       const messagesWithSeenStatus = await Promise.all(
         messagesList.map(async (message) => {
           try {
@@ -88,14 +91,22 @@ const Dashboard = () => {
           }
         })
       );
-
-      setMessages(messagesWithSeenStatus);
+  
+      // For the "Unseen" and "Overdue" filters, apply final validation
+      if (filterType === "unseen") {
+        setMessages(messagesWithSeenStatus.filter((msg) => !msg.seen));
+      } else if (filterType === "overdue") {
+        setMessages(messagesWithSeenStatus.filter((msg) => new Date(msg.date) < new Date() && !msg.seen));
+      } else {
+        setMessages(messagesWithSeenStatus);
+      }
     } catch (err) {
       console.error("Error fetching messages:", err);
     } finally {
       setLoadingMessages(false);
     }
   };
+  
 
   useEffect(() => {
     if (selectedCompany) {
@@ -222,6 +233,8 @@ const Dashboard = () => {
               { label: "Last 5 Past Messages", value: "last5" },
               { label: "Upcoming Messages", value: "upcoming" },
               { label: "All Messages", value: "all" },
+              { label: "Unseen", value: "unseen" },
+              { label: "Overdue", value: "overdue" },
             ].map((btn) => (
               <button
                 key={btn.value}

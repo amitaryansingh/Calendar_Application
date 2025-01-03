@@ -82,62 +82,6 @@ const UserManagement = () => {
     );
   }, [companySearchTerm, companies]);
 
-  // const handleSave = async () => {
-  //   try {
-  //     const userToSave = {
-  //       firstname: userForm.firstname,
-  //       secondname: userForm.secondname,
-  //       email: userForm.email,
-  //       password: userForm.password,
-  //       role: userForm.role,
-  //     };
-
-  //     // Handle the case of updating an existing user
-  //     if (editingUser) {
-  //       const updatedUserResponse = await updateUser(editingUser.uid, userToSave);
-
-  //       // Only update company assignments if needed
-  //       const newCompanyIds = userForm.assignedCompanies.map((company) => company.mid);
-  //       const removedCompanyIds = removedCompanies.map((company) => company.mid);
-
-  //       // Call the remove company API for the removed companies
-  //       if (removedCompanyIds.length > 0) {
-  //         for (const companyId of removedCompanyIds) {
-  //           await removeCompanyFromUser(editingUser.uid, companyId);
-  //         }
-  //       }
-
-  //       // Assign the new companies to the user if needed
-  //       if (newCompanyIds.length > 0) {
-  //         await assignMultipleCompaniesToUser(editingUser.uid, newCompanyIds);
-  //       }
-
-  //       // Update the local state after saving changes
-  //       setUsers((prevUsers) =>
-  //         prevUsers.map((user) =>
-  //           user.uid === editingUser.uid ? updatedUserResponse.data : user
-  //         )
-  //       );
-
-  //       setSuccess("User updated successfully!");
-
-  //       // Fetch the updated user data to reflect the change
-  //       const updatedUser = await getAllUsers();
-  //       setUsers(updatedUser.data);
-  //     } else {
-  //       // Handle the case of creating a new user
-  //       const newUserResponse = await createUser(userToSave);
-  //       setUsers((prevUsers) => [...prevUsers, newUserResponse.data]);
-  //       setSuccess("User created successfully!");
-  //     }
-
-  //     resetForm();
-  //   } catch (err) {
-  //     console.error("Error saving user:", err.response || err.message);
-  //     setError(err.response?.data?.message || "Error saving user.");
-  //   }
-  // };
-
   const handleSave = async () => {
     try {
       const userToSave = {
@@ -276,14 +220,16 @@ const UserManagement = () => {
       {error && <p className="error">{error}</p>}
       {success && <p className="success">{success}</p>}
 
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search by name, email, or ID"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
+      <div className="search-bar-container">
+  <input
+    type="text"
+    className="search-bar"
+    placeholder="Search by name, email, or ID"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+</div>
+ 
 
       <div className="user-list">
         <table>
@@ -351,34 +297,40 @@ const UserManagement = () => {
           </select>
 
           <h4>Assigned Companies</h4>
-          <ul>
-            {userForm.assignedCompanies.map((company) => (
-              <li key={`assigned-${company.mid}`}>
-                {company.name}
-                <button onClick={() => handleRemoveCompany(company.mid)}>Remove</button>
-              </li>
-            ))}
-          </ul>
+<div className="assigned-companies-list">
+  <ul>
+    {userForm.assignedCompanies.map((company) => (
+      <li key={`assigned-${company.mid}`}>
+        {company.name}
+        <button onClick={() => handleRemoveCompany(company.mid)}>Remove</button>
+      </li>
+    ))}
+  </ul>
+</div>
+
 
           {editingUser && (
             <div className="company-search">
-              <input
-                type="text"
-                placeholder="Search companies"
-                value={companySearchTerm}
-                onChange={(e) => setCompanySearchTerm(e.target.value)}
-              />
-              <ul>
-                {filteredCompanies
-                  .filter((company) => !userForm.assignedCompanies.some(c => c.mid === company.mid)) // Filter out already assigned companies
-                  .map((company) => (
-                    <li key={`available-${company.mid}`}>
-                      {company.name}
-                      <button onClick={() => handleAssignCompany(company.mid)}>Assign</button>
-                    </li>
-                  ))}
-              </ul>
-            </div>
+              <h4>Available Company</h4>
+            <input
+            
+              type="text"
+              placeholder="Search companies"
+              value={companySearchTerm}
+              onChange={(e) => setCompanySearchTerm(e.target.value)}
+            />
+            <ul>
+              {filteredCompanies
+                .filter((company) => !userForm.assignedCompanies.some(c => c.mid === company.mid)) // Filter out already assigned companies
+                .map((company) => (
+                  <li key={`available-${company.mid}`}>
+                    {company.name}
+                    <button onClick={() => handleAssignCompany(company.mid)}>Assign</button>
+                  </li>
+                ))}
+            </ul>
+          </div>
+          
           )}
         </div>
         <button onClick={handleSave}>{editingUser ? "Save Changes" : "Add User"}</button>
