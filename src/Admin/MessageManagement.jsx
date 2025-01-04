@@ -392,6 +392,7 @@ const MessageManagement = () => {
                 ))}
               </div>
             </div> */}
+            <div className="user-grid-container">
               <div className="user-grid">
                   {filteredUsers.map((user) => {
                     const isAssigned = currentMessage.userIds?.includes(user.uid); // Check if user is already assigned
@@ -420,6 +421,7 @@ const MessageManagement = () => {
                     );
                   })}
                 </div>
+              </div>
             <button onClick={handleAssignSubmit}>Assign</button>
           </div>
         </div>
