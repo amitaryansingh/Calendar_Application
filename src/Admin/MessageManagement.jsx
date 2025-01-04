@@ -148,6 +148,8 @@ const MessageManagement = () => {
       await assignUsersAndCompanyToMessage(currentMessage.messageId, selectedCompany, selectedUsers);
       setSuccess("Users and company assigned successfully!");
       handleAssignClose();
+      const messagesResponse = await getAllMessages();
+      setMessages(messagesResponse.data);
     } catch (err) {
       setError("Error assigning users and company.");
       console.error("Error assigning:", err);
@@ -326,7 +328,7 @@ const MessageManagement = () => {
             </div>
 
             {/* Company Selection */}
-            <div>
+            {/* <div>
               <h4>Select Company</h4>
               <select onChange={(e) => setSelectedCompany(e.target.value)}>
                 <option value="">Select Company</option>
@@ -336,7 +338,26 @@ const MessageManagement = () => {
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
+              <div>
+                <h4>Select Company</h4>
+                <select
+                  onChange={(e) => setSelectedCompany(e.target.value)}
+                  disabled={!!currentMessage.companyId}
+                >
+                  <option value="">Select Company</option>
+                  {companies.map((company) => (
+                    <option
+                      key={company.mid}
+                      value={company.mid}
+                      selected={currentMessage.companyId === company.mid}
+                    >
+                      {company.name}
+                    </option>
+                  ))}
+                </select>
+                {currentMessage.companyId && <p>Company already assigned: {getCompanyName(currentMessage.companyId)}</p>}
+              </div>
 
             {/* Search Bar for Users */}
             <div>
@@ -349,7 +370,7 @@ const MessageManagement = () => {
             </div>
 
             {/* Scrollable List of Users */}
-            <div className="user-grid-container">
+            {/* <div className="user-grid-container">
               <div className="user-grid">
                 {filteredUsers.map((user) => (
                   <div key={user.uid} className="user-item">
@@ -370,8 +391,35 @@ const MessageManagement = () => {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
+              <div className="user-grid">
+                  {filteredUsers.map((user) => {
+                    const isAssigned = currentMessage.userIds?.includes(user.uid); // Check if user is already assigned
 
+                    return (
+                      <div key={user.uid} className="user-item">
+                        <input
+                          type="checkbox"
+                          disabled={isAssigned} // Disable if already assigned
+                          checked={selectedUsers.includes(user.uid) || isAssigned} // Checked if already assigned or selected
+                          onChange={() => {
+                            if (isAssigned) return; // Prevent action if disabled
+
+                            if (selectedUsers.includes(user.uid)) {
+                              setSelectedUsers(selectedUsers.filter((id) => id !== user.uid));
+                            } else {
+                              setSelectedUsers([...selectedUsers, user.uid]);
+                            }
+                          }}
+                        />
+                        <label>
+                          {user.firstname} {user.secondname} ({user.email})
+                          {isAssigned && " (Already Assigned)"} {/* Add a note for already assigned users */}
+                        </label>
+                      </div>
+                    );
+                  })}
+                </div>
             <button onClick={handleAssignSubmit}>Assign</button>
           </div>
         </div>
