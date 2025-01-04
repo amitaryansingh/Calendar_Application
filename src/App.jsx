@@ -10,6 +10,18 @@ import CalendarView from "./user/CalendarView";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
+  const [role, setRole] = useState(localStorage.getItem("role")?.trim());
+
+  // Handle redirection based on authentication and role
+  const ProtectedRoute = ({ element, allowedRoles }) => {
+    if (!isAuthenticated) {
+      return <Navigate to="/" />;
+    }
+    if (!allowedRoles.includes(role)) {
+      return <Navigate to={role === "ADMIN" ? "/admindashboard" : "/dashboard"} />;
+    }
+    return element;
+  };
 
   return (
     <Router>
@@ -19,7 +31,11 @@ const App = () => {
         <Route
           path="/"
           element={
-            isAuthenticated ? <Navigate to="/dashboard" /> : <Home setIsAuthenticated={setIsAuthenticated} />
+            isAuthenticated ? (
+              <Navigate to={role === "ADMIN" ? "/admindashboard" : "/dashboard"} />
+            ) : (
+              <Home setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
+            )
           }
         />
 
@@ -27,11 +43,10 @@ const App = () => {
         <Route
           path="/admindashboard"
           element={
-            isAuthenticated ? (
-              <AdminDashboard />
-            ) : (
-              <Navigate to="/" />
-            )
+            <ProtectedRoute
+              element={<AdminDashboard />}
+              allowedRoles={["ADMIN"]}
+            />
           }
         />
 
@@ -39,19 +54,28 @@ const App = () => {
         <Route
           path="/dashboard"
           element={
-            isAuthenticated ? (
-              <>
-                <Dashboard />
-                <CalendarView />
-                <Footer />
-              </>
-            ) : (
-              <Navigate to="/" />
-            )
+            <ProtectedRoute
+              element={
+                <>
+                  <Dashboard />
+                  <CalendarView />
+                  <Footer />
+                </>
+              }
+              allowedRoles={["USER"]}
+            />
           }
         />
 
-        <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/"} />} />
+        {/* Catch-all route */}
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to={isAuthenticated ? (role === "ADMIN" ? "/admindashboard" : "/dashboard") : "/"}
+            />
+          }
+        />
       </Routes>
     </Router>
   );
