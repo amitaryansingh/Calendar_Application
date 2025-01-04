@@ -177,7 +177,7 @@ button:disabled {
   
   position: relative;
     top: 10px;
-    right: -470px;
+    float:right;
     font-size: 30px;
   font-weight: bold;
   color: red;
