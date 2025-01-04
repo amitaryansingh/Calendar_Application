@@ -23,18 +23,6 @@ const Dashboard = () => {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const user_id = localStorage.getItem("user_id");
 
-//experimental
-const navigate = useNavigate();
-  const user_id = localStorage.getItem("user_id");
-  const role = localStorage.getItem("role");
-
-  useEffect(() => {
-    // Redirect to admin dashboard if role is ADMIN
-    if (role === "ADMIN") {
-      navigate("/admindashboard");
-    }
-  }, [role, navigate]);
-//experimental
   useEffect(() => {
     const fetchCompanies = async () => {
       setLoadingCompanies(true);
