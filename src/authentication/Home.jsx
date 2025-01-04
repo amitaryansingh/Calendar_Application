@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { signIn, signUp, getUserRoleByEmail, getUserIdByEmail } from "./aapi.jsx"; // Ensure you import getUserRoleByEmail
+import { signIn, signUp, getUserRoleByEmail, getUserIdByEmail } from "./aapi.jsx";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 
-const Home = ({ setIsAuthenticated }) => {
+const Home = ({ setIsAuthenticated, setRole }) => {
   const [formType, setFormType] = useState("signin");
   const [formData, setFormData] = useState({
     firstname: "",
@@ -11,8 +11,8 @@ const Home = ({ setIsAuthenticated }) => {
     email: "",
     password: "",
   });
-  const [signupMessage, setSignupMessage] = useState(""); // State to store signup message
-  const navigate = useNavigate(); // Create navigate function for redirect
+  const [signupMessage, setSignupMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,37 +23,28 @@ const Home = ({ setIsAuthenticated }) => {
     e.preventDefault();
     try {
       if (formType === "signin") {
-        // Sign in logic
         const response = await signIn(formData);
         const { token } = response.data;
-        localStorage.setItem("token", token); // Save token
+        localStorage.setItem("token", token);
         localStorage.setItem("email", formData.email);
-        const user_id = await getUserIdByEmail(localStorage.getItem("email"));
-
-        localStorage.setItem("user_id", user_id.data);
-        console.log(user_id.data);
-         // Save email for role checking
-        setIsAuthenticated(true); // Set authentication state
-
-        // Fetch user role only after successful login
+        const userIdResponse = await getUserIdByEmail(formData.email);
+        localStorage.setItem("user_id", userIdResponse.data);
+        setIsAuthenticated(true);
         const roleResponse = await getUserRoleByEmail(formData.email);
-        localStorage.setItem("role",roleResponse.data);
-
-        if (roleResponse.data === "ADMIN") {
+        const role = roleResponse.data.trim();
+        localStorage.setItem("role", role);
+        setRole(role);
+        if (role === "ADMIN") {
           navigate("/admindashboard");
-        } else if (roleResponse.data==="USER"){
+        } else if (role === "USER") {
           navigate("/dashboard");
+        } else {
+          navigate("/");
         }
-        else {
-            navigate("/Home")
-        }
-
-        alert("Welcome!");
       } else if (formType === "signup") {
-        // Sign up logic with the additional fields
         await signUp(formData);
-        setSignupMessage("Account created! You can now log in."); // Show success message
-        setFormType("signin"); // Switch form to sign in after successful signup
+        setSignupMessage("Account created! You can now log in.");
+        setFormType("signin");
       }
     } catch (err) {
       console.error(err);
@@ -107,17 +98,21 @@ const Home = ({ setIsAuthenticated }) => {
           />
           <button type="submit">{formType === "signin" ? "Sign In" : "Sign Up"}</button>
         </form>
-        {signupMessage && <p style={{ color: "green" }}>{signupMessage}</p>} {/* Show signup success message */}
+        {signupMessage && <p style={{ color: "green" }}>{signupMessage}</p>}
         <p>
           {formType === "signin" ? (
             <>
               Don't have an account?{" "}
-              <span onClick={() => setFormType("signup")}>Sign Up</span>
+              <span className="toggle-form" onClick={() => setFormType("signup")}>
+                Sign Up
+              </span>
             </>
           ) : (
             <>
               Already have an account?{" "}
-              <span onClick={() => setFormType("signin")}>Sign In</span>
+              <span className="toggle-form" onClick={() => setFormType("signin")}>
+                Sign In
+              </span>
             </>
           )}
         </p>
