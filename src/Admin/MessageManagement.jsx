@@ -274,7 +274,7 @@ const MessageManagement = () => {
   >
     <option value="">Select Priority</option>
     <option value="HIGH">High</option>
-    <option value="MID">Mid</option>
+    <option value="MEDIUM">Mid</option>
     <option value="LOW">Low</option>
   </select>
 
