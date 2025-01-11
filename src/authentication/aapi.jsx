@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://ec2-13-203-99-161.ap-south-1.compute.amazonaws.com:9090/calendarapp", // Base URL for the API
+  baseURL: "https://api.calendarapp.me/calendarapp", // Base URL for the API
   withCredentials: true,
 });
 
