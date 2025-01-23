@@ -97,15 +97,15 @@ const CalendarView = () => {
       );
   
       if (hasUnseenPastEvents) {
-        return { style: { border: "3px solid #ff0000" } }; // Red border for unseen past
+        return { style: { border: "1px solid #ff0000" } }; // Red border for unseen past
       }
   
       if (hasUnseenTodayEvents) {
-        return { style: { border: "3px solid #ffcc00" } }; // Yellow border for unseen today
+        return { style: { border: "1px solid #ffcc00" } }; // Yellow border for unseen today
       }
   
       if (hasFutureEvents) {
-        return { style: { border: "3px solid #007bff" } }; // Blue border for future
+        return { style: { border: "1px solid #007bff" } }; // Blue border for future
       }
     }
   
@@ -122,7 +122,7 @@ const CalendarView = () => {
         events={events}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: 500, width: 1100, margin: "0px" }}
+        style={{ height: 600, width: 1300, margin: "0px" }}
         eventPropGetter={eventPropGetter}
         dayPropGetter={dayPropGetter}
         onSelectEvent={handleEventClick}
